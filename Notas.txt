@@ -1,0 +1,14 @@
+JMeter:
+    https://jmeter.apache.org/
+    Creación pruebas: https://www.youtube.com/watch?v=6X2RrqqbTik
+    Demo: https://www.youtube.com/watch?v=XXQ92aLdcqw
+ZeroMQ:
+    Request-Reply: 
+        https://www.youtube.com/watch?v=vdN1f9p2IUU
+    Pub-Sub: 
+        Exp: https://www.youtube.com/watch?v=dbrwsWbTfC8
+        Demo: https://www.youtube.com/watch?v=vk-0Gl6Brhw
+    Parallel Pipeline: 
+        https://www.youtube.com/watch?v=Nj_UVXD3eKk
+    Exclusive Pair: 
+        https://www.youtube.com/watch?v=JKJa9oGCaFw
