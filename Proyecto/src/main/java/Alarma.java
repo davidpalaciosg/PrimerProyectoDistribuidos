@@ -1,3 +1,4 @@
+package Proyecto.src.main.java;
 public class Alarma {
     private String tipo;
     private int dato;

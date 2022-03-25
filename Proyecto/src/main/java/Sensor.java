@@ -1,6 +1,7 @@
+package Proyecto.src.main.java;
 import java.util.ArrayList;
 
-public class Sensor {
+public abstract class Sensor {
     private String tipo;
     private int tiempo;
     private ArchivoConfiguracion archivoConfiguracion;

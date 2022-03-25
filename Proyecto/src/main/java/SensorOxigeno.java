@@ -1,3 +1,4 @@
+package Proyecto.src.main.java;
 public class SensorOxigeno extends Sensor {
     
     public SensorOxigeno(String tipo, int tiempo, ArchivoConfiguracion archivoConfiguracion) {

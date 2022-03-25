@@ -1,3 +1,4 @@
+package Proyecto.src.main.java;
 public class ArchivoConfiguracion {
     private float valoresCorrectos;
     private float valoresFueraDeRango;

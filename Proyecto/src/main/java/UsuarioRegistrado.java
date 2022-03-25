@@ -1,3 +1,4 @@
+package Proyecto.src.main.java;
 public class UsuarioRegistrado {
     private String usuario;
     private String password;
