@@ -1,4 +1,4 @@
-package Proyecto.src.main.java;
+package com.proyectodistribuidos;
 public class ArchivoConfiguracion {
     private float valoresCorrectos;
     private float valoresFueraDeRango;

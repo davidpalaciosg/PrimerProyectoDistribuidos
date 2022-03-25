@@ -12,3 +12,6 @@ ZeroMQ:
         https://www.youtube.com/watch?v=Nj_UVXD3eKk
     Exclusive Pair: 
         https://www.youtube.com/watch?v=JKJa9oGCaFw
+
+Compilar con Maven:
+mvn clean install

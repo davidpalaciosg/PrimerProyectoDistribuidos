@@ -1,4 +1,4 @@
-package Proyecto.src.main.java;
+package com.proyectodistribuidos;
 public class SensorTemperatura extends Sensor {
 
     public SensorTemperatura(String tipo, int tiempo, ArchivoConfiguracion archivoConfiguracion) {

@@ -1,4 +1,4 @@
-package Proyecto.src.main.java;
+package com.proyectodistribuidos;
 import java.util.ArrayList;
 
 public abstract class Sensor {

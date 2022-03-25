@@ -1,5 +1,7 @@
-package Proyecto.src.main.java;
+package com.proyectodistribuidos;
+
 public class Alarma {
+
     private String tipo;
     private int dato;
 

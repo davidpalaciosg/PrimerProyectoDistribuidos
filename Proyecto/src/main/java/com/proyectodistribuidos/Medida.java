@@ -1,4 +1,4 @@
-package Proyecto.src.main.java;
+package com.proyectodistribuidos;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 

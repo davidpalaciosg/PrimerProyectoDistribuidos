@@ -1,4 +1,4 @@
-package Proyecto.src.main.java;
+package com.proyectodistribuidos;
 public class SensorPH extends Sensor {
 
     public SensorPH(String tipo, int tiempo, ArchivoConfiguracion archivoConfiguracion) {
