@@ -24,8 +24,7 @@
             "name": "Launch CrearMonitor",
             "request": "launch",
             "mainClass": "com.proyectodistribuidos.CrearMonitor",
-            "projectName": "Proyecto",
-            "args": "temperatura localhost:5556"
+            "projectName": "Proyecto"
         },
         {
             "type": "java",

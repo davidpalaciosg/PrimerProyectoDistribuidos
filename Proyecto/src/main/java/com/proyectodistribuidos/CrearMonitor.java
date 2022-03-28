@@ -21,18 +21,25 @@ public class CrearMonitor {
         String direccion = args[1];
 
         try {
-            ZContext context = new ZContext();
+            ZMQ.Context context =  ZMQ.context(1);
             // Socket SUB
-            ZMQ.Socket subscriber = context.createSocket(SocketType.SUB);
+            ZMQ.Socket subscriber = context.socket(SocketType.SUB);
             // Socket conectado al puerto
             // Crea la conexión
-            subscriber.connect("tcp://localhost:5556");
-            // subscriber.connect("ipc://" + tipo);
-            //tipo += " ";
-            // Suscribirse
-        
-            boolean exito = subscriber.subscribe(tipo.getBytes(ZMQ.CHARSET));
-            System.out.println("Canal creado: " + exito+" "+tipo+"a");
+
+            String tcp = "tcp://" + direccion;
+            subscriber.connect(tcp);
+
+            String ipc = "ipc://" + tipo;
+            subscriber.bind(ipc);
+
+            tipo+=" ";
+            System.out.println("Intentando conectar...");
+            
+
+            //Subscribir
+            subscriber.subscribe("".getBytes());
+            
 
             while (true) {
                 String string = subscriber.recvStr();

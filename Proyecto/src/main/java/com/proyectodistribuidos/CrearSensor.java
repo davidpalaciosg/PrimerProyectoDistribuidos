@@ -38,22 +38,24 @@ public class CrearSensor{
             //Crear publisher de topico tipo
             //new CrearSensor("ipc://"+tipo).run(null);
 
-            ZContext nuevoContext = new ZContext();
-            ZMQ.Socket nuevoPublisher = nuevoContext.createSocket(SocketType.PUB);
+            ZMQ.Context nuevoContext = ZMQ.context(1);
+            ZMQ.Socket nuevoPublisher = nuevoContext.socket(SocketType.PUB);
             
             //Socket con puerto
-			nuevoPublisher.bind("tcp://localhost:5556");
-			nuevoPublisher.bind("ipc://"+tipo);
-            System.out.println("Canal creado");
+            String tcp = "tcp://*:5555";
+			nuevoPublisher.connect(tcp);
 
+            String ipc = "ipc://" + tipo;
+			nuevoPublisher.connect(ipc);
+
+            System.out.println("Generando medidas de " + tipo+"...");
             while(!Thread.currentThread().isInterrupted())
 			{
                  //Generar lista de medidas
                  String message = sensor.generarMedidasString(sensor.generarMedidas());
-                 Thread.sleep(sensor.getTiempo()); // Set the message time period
-                 System.out.println(message);
-                 boolean send = nuevoPublisher.send(message,0);
-                 System.out.println(send);
+                 Thread.sleep(sensor.getTiempo()); // Set the message time period 
+                nuevoPublisher.send(message,0);
+                 
             }
             nuevoContext.close();
         } catch (Exception e) {

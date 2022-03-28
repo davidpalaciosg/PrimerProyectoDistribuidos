@@ -16,11 +16,13 @@ ZeroMQ:
 Compilar con Maven:
 mvn clean install
 
-Crear Sensor:
+Crear Sensor: David Palacios
+Linux:
 /usr/bin/env /usr/lib/jvm/java-11-openjdk-amd64/bin/java @/tmp/cp_16hogm0ypri56ko13mayyxjp.argfile com.proyectodistribuidos.CrearSensor temperatura 5000 assets/config1.txt
 /usr/bin/env /usr/lib/jvm/java-11-openjdk-amd64/bin/java @/tmp/cp_16hogm0ypri56ko13mayyxjp.argfile com.proyectodistribuidos.CrearSensor ph 5000 assets/config2.txt
 /usr/bin/env /usr/lib/jvm/java-11-openjdk-amd64/bin/java @/tmp/cp_16hogm0ypri56ko13mayyxjp.argfile com.proyectodistribuidos.CrearSensor oxigeno 5000 assets/config3.txt
-
+Windows:
+c:; cd 'c:\Users\Estudiante\Documents\DavidPalacios\Distribuidos\PrimerProyectoDistribuidos\Proyecto'; & 'C:\Program Files\Java\jdk-17.0.2\bin\java.exe' '-XX:+ShowCodeDetailsInExceptionMessages' '@C:\Users\ESTUDI~1\AppData\Local\Temp\1\cp_7c4v9m8rlwtojzxc616uv17i9.argfile' 'com.proyectodistribuidos.CrearSensor' temperatura 2500 assets\config1.txt
 Crear Monitor:
 /usr/bin/env /usr/lib/jvm/java-11-openjdk-amd64/bin/java @/tmp/cp_16hogm0ypri56ko13mayyxjp.argfile com.proyectodistribuidos.CrearMonitor temperatura localhost:5556
 
