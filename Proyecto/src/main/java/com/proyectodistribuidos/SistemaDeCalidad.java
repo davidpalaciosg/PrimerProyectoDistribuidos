@@ -19,15 +19,5 @@ public class SistemaDeCalidad {
     public void imprimirAlarma(String infoAlarma)
     {
         System.out.println(infoAlarma);
-    }
-    //TODO Leer de archivo de texto de usuarios
-    public ArrayList<UsuarioRegistrado> leerUsuariosRegistrados(String filename) {
-        return null;
-    }
-    //TODO Obtener alarmas de monitores
-    public String obtenerAlarmas(){
-        return null;
-    }
-
-    
+    } 
 }

@@ -2,13 +2,12 @@ package com.proyectodistribuidos;
 
 import org.zeromq.SocketType;
 import org.zeromq.ZMQ;
-import org.zeromq.ZContext;
 
 public class CrearMonitor {
     /*
      * args:
      * [0]: tipo de monitor
-     * [1] : direccion ip:puerto del publisher
+     * [1] : dirección ip:puerto del publisher
      * 
      */
     public static void main(String[] args) {
@@ -30,22 +29,19 @@ public class CrearMonitor {
             String tcp = "tcp://" + direccion;
             subscriber.connect(tcp);
 
+            //El monitor crea el canal de comunicación (único)
             String ipc = "ipc://" + tipo;
             subscriber.bind(ipc);
 
-            tipo+=" ";
             System.out.println("Intentando conectar...");
-            
-
-            //Subscribir
+            //Subscribir por tipo
             subscriber.subscribe("".getBytes());
             
-
-            while (true) {
+            while ((!Thread.currentThread().isInterrupted())) {
                 String string = subscriber.recvStr();
                 System.out.println(string);
             }
-            //context.close();
+            context.close();
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             System.exit(1);

@@ -67,8 +67,9 @@ public abstract class Sensor {
         this.valorMaximo = valorMaximo;
     }
 
-    public ArrayList<Medida> generarMedidas() {
-        ArrayList<Medida> medidas = new ArrayList<Medida>();
+    public String generarMedidas() {
+
+        String res="";
         // Crear numero aleatorio de medidas entre 10 y 100
         int cantMedidas = (int) ((Math.random() * (100 - 10)) + 10);
 
@@ -77,14 +78,14 @@ public abstract class Sensor {
             float dato = (float) (Math.random() * (valorMaximo - valorMinimo) + valorMinimo);
             Medida medida = new Medida(dato, tipo);
             // Insertar medida
-            medidas.add(medida);
+            res +=medida.toString();
         }
         // Crear medidas erroneas
         for (int i = 0; i < cantMedidas * archivoConfiguracion.getErrores(); i++) {
             float dato = (float) (Math.random() * (0 - -25) + -25); // Valores negativos
             Medida medida = new Medida(dato, tipo);
             // Insertar medida
-            medidas.add(medida);
+            res +=medida.toString();
         }
         // Crear medidas fuera de rango
         // Medidas antes del valor mínimo [1-valorMinimo]
@@ -92,24 +93,14 @@ public abstract class Sensor {
             float dato = (float) (Math.random() * (valorMinimo - 1) + 1);
             Medida medida = new Medida(dato, tipo);
             // Insertar medida
-            medidas.add(medida);
+            res +=medida.toString();
         }
         // Medidas después del valor máximo [valorMaximo-valoraMaximo+25]
         for (int i = 0; i < cantMedidas * archivoConfiguracion.getValoresFueraDeRango() / 2; i++) {
             float dato = (float) (Math.random() * (valorMaximo + 25 - valorMaximo) + valorMaximo);
             Medida medida = new Medida(dato, tipo);
             // Insertar medida
-            medidas.add(medida);
-        }
-        return medidas;
-    }
-
-    public String generarMedidasString(ArrayList<Medida> medidas)
-    {
-        String res="";
-        for (Medida med : medidas) {
-            //System.out.println(med.toString());
-            res+=med.toString();
+            res +=medida.toString();
         }
         return res;
     }

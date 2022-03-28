@@ -2,11 +2,10 @@ package com.proyectodistribuidos;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.ArrayList;
 
 import org.zeromq.SocketType;
 import org.zeromq.ZMQ;
-import org.zeromq.ZContext;
+
 
 public class CrearSensor{
 
@@ -15,8 +14,8 @@ public class CrearSensor{
     /*
      * Args:
      * -[0]: tipo de sensor
-     * -[1]: tiempo de creacion de medidas
-     * -[2]: ubicacion archivo de configuración
+     * -[1]: tiempo de creación de medidas
+     * -[2]: ubicación archivo de configuración
      */
 
     public static void main(String[] args) {
@@ -35,13 +34,12 @@ public class CrearSensor{
             sensor = crearSensor(tipo, tiempo, archivo);
             System.out.println("Sensor de " + tipo + " creado");
             
-            //Crear publisher de topico tipo
-            //new CrearSensor("ipc://"+tipo).run(null);
-
+            //Crear publisher de tópico (tipo de sensor)
+            
             ZMQ.Context nuevoContext = ZMQ.context(1);
             ZMQ.Socket nuevoPublisher = nuevoContext.socket(SocketType.PUB);
             
-            //Socket con puerto
+            //Conectar sockets
             String tcp = "tcp://*:5555";
 			nuevoPublisher.connect(tcp);
 
@@ -52,10 +50,10 @@ public class CrearSensor{
             while(!Thread.currentThread().isInterrupted())
 			{
                  //Generar lista de medidas
-                 String message = sensor.generarMedidasString(sensor.generarMedidas());
+                 String message = sensor.generarMedidas();
                  Thread.sleep(sensor.getTiempo()); // Set the message time period 
                 nuevoPublisher.send(message,0);
-                 
+                System.out.println(message);
             }
             nuevoContext.close();
         } catch (Exception e) {
