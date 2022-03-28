@@ -1,7 +1,4 @@
 package com.ejemplospubsub;
-
-import java.util.Random;
-import java.util.StringJoiner;
 import java.util.StringTokenizer;
 
 import org.zeromq.SocketType;
@@ -29,9 +26,9 @@ public class Subscriber {
 				String string = subscriber.recvStr(0).trim();
 				System.out.println(string);
 				StringTokenizer sscanf = new StringTokenizer(string, " ");
-				int zipcode = Integer.valueOf(sscanf.nextToken());
+				//int zipcode = Integer.valueOf(sscanf.nextToken());
 				int temperature = Integer.valueOf(sscanf.nextToken());
-				int relhumidity = Integer.valueOf(sscanf.nextToken());
+				//int relhumidity = Integer.valueOf(sscanf.nextToken());
 
 				total_temp += temperature;
 			}
