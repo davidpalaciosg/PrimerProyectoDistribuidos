@@ -28,10 +28,9 @@ public class CrearMonitor {
             // Crea la conexión
             subscriber.connect("tpc://localhost:5556");
            // subscriber.connect("ipc://" + tipo);
-           tipo+=" ";
-            System.out.println("Canal creado: "+tipo);
             //Suscribirse
             subscriber.subscribe(tipo.getBytes(ZMQ.CHARSET));
+            System.out.println("Canal creado: "+tipo);
 
             while(!Thread.currentThread().isInterrupted())
 			{
