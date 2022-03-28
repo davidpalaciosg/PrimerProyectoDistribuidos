@@ -4,7 +4,16 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 
-public class CrearSensor {
+import org.zeromq.SocketType;
+import org.zeromq.ZMQ;
+import org.zeromq.ZContext;
+
+public class CrearSensor{
+
+    private org.zeromq.ZMQ.Context context;
+    private org.zeromq.ZMQ.Socket publisher;
+    private String connection;
+    private static Sensor sensor;
 
     /*
      * Args:
@@ -12,6 +21,7 @@ public class CrearSensor {
      * -[1]: tiempo de creacion de medidas
      * -[2]: ubicacion archivo de configuración
      */
+
     public static void main(String[] args) {
 
         if (args.length != 3) {
@@ -25,9 +35,14 @@ public class CrearSensor {
 
             // Crear archivo de configuración
             ArchivoConfiguracion archivo = creaArchivoConfiguracion(ubicacionArchivo);
-            Sensor sensor = crearSensor(tipo, tiempo, archivo);
+            sensor = crearSensor(tipo, tiempo, archivo);
+            System.out.println("Sensor de " + tipo + " creado");
+            
+            //Crear publisher de topico tipo
+            new CrearSensor("ipc://"+tipo).run(null);
 
-            System.out.println("Sensor creado");
+             
+            
 
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -77,8 +92,34 @@ public class CrearSensor {
         }
     }
 
-    // TODO Publicar medida de Sensor hacia Monitor
-    public boolean publicarMedida(ArrayList<String> medidasString) {
-        return false;
+    public CrearSensor(String connection) {
+        this.connection = connection;
+    }
+
+    public void open() {
+        context = org.zeromq.ZMQ.context(1);
+        publisher = context.socket(SocketType.PUB);
+        publisher.bind(connection);
+    }
+
+    public void run(Object[] args) {
+        open();
+        System.out.println("Sensor is running");
+        while (!Thread.currentThread().isInterrupted()) {
+            try {
+                //Generar lista de medidas
+                String message = sensor.generarMedidasString(sensor.generarMedidas());
+                Thread.sleep(sensor.getTiempo()); // Set the message time period
+                publisher.send(message);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        close();
+    }
+
+    public void close() {
+        publisher.close();
+        context.term();
     }
 }

@@ -15,3 +15,10 @@ ZeroMQ:
 
 Compilar con Maven:
 mvn clean install
+
+Crear Sensor:
+/usr/bin/env /usr/lib/jvm/java-11-openjdk-amd64/bin/java @/tmp/cp_16hogm0ypri56ko13mayyxjp.argfile com.proyectodistribuidos.CrearSensor temperatura 5000 assets/config1.txt
+/usr/bin/env /usr/lib/jvm/java-11-openjdk-amd64/bin/java @/tmp/cp_16hogm0ypri56ko13mayyxjp.argfile com.proyectodistribuidos.CrearSensor ph 5000 assets/config2.txt
+/usr/bin/env /usr/lib/jvm/java-11-openjdk-amd64/bin/java @/tmp/cp_16hogm0ypri56ko13mayyxjp.argfile com.proyectodistribuidos.CrearSensor oxigeno 5000 assets/config3.txt
+
+

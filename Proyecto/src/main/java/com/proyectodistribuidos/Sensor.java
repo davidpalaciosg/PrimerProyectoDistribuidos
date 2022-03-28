@@ -103,4 +103,14 @@ public abstract class Sensor {
         }
         return medidas;
     }
+
+    public String generarMedidasString(ArrayList<Medida> medidas)
+    {
+        String res="";
+        for (Medida med : medidas) {
+            System.out.println(med.toString());
+            res+=med.toString();
+        }
+        return res;
+    }
 }
