@@ -6,10 +6,31 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch Subscriber",
+            "request": "launch",
+            "mainClass": "com.ejemplospubsub.Subscriber",
+            "projectName": "Proyecto"
+        },
+        {
+            "type": "java",
+            "name": "Launch Publisher",
+            "request": "launch",
+            "mainClass": "com.ejemplospubsub.Publisher",
+            "projectName": "Proyecto"
+        },
+        {
+            "type": "java",
+            "name": "Launch CrearMonitor",
+            "request": "launch",
+            "mainClass": "com.proyectodistribuidos.CrearMonitor",
+            "projectName": "Proyecto"
+        },
+        {
+            "type": "java",
             "name": "Launch CrearSensor",
             "request": "launch",
             "mainClass": "com.proyectodistribuidos.CrearSensor",
-            "projectName": "Proyecto",
+            "projectName": "Proyecto"
         },
         {
             "type": "java",

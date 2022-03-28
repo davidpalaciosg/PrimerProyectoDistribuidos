@@ -41,8 +41,9 @@ public class CrearSensor{
             ZContext nuevoContext = new ZContext();
             ZMQ.Socket nuevoPublisher = nuevoContext.createSocket(SocketType.PUB);
             //Socket con puerto
-			nuevoPublisher.connect("tcp://*:5556");
-			nuevoPublisher.connect("ipc://"+tipo);
+			nuevoPublisher.bind("tcp://*:5556");
+			nuevoPublisher.bind("ipc://"+tipo);
+            System.out.println("Canal creado");
 
             while(!Thread.currentThread().isInterrupted())
 			{

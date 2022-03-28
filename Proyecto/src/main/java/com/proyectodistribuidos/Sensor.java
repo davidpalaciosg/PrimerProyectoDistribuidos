@@ -108,7 +108,7 @@ public abstract class Sensor {
     {
         String res="";
         for (Medida med : medidas) {
-            System.out.println(med.toString());
+            //System.out.println(med.toString());
             res+=med.toString();
         }
         return res;
