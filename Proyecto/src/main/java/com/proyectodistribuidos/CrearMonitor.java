@@ -13,7 +13,7 @@ public class CrearMonitor {
      */
     public static void main(String[] args) {
 
-        if(args.length != 2) {
+        if (args.length != 2) {
             System.out.println("Error: Numero de argumentos incorrecto");
             System.exit(1);
         }
@@ -26,18 +26,19 @@ public class CrearMonitor {
             ZMQ.Socket subscriber = context.createSocket(SocketType.SUB);
             // Socket conectado al puerto
             // Crea la conexión
-            subscriber.connect("tpc://localhost:5556");
-           // subscriber.connect("ipc://" + tipo);
-            //Suscribirse
-            subscriber.subscribe(tipo.getBytes(ZMQ.CHARSET));
-            System.out.println("Canal creado: "+tipo);
+            subscriber.connect("tcp://localhost:5556");
+            // subscriber.connect("ipc://" + tipo);
+            //tipo += " ";
+            // Suscribirse
+        
+            boolean exito = subscriber.subscribe(tipo.getBytes(ZMQ.CHARSET));
+            System.out.println("Canal creado: " + exito+" "+tipo+"a");
 
-            while(!Thread.currentThread().isInterrupted())
-			{
-                String string = subscriber.recvStr(0).trim();
+            while (true) {
+                String string = subscriber.recvStr();
                 System.out.println(string);
             }
-            context.close();
+            //context.close();
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             System.exit(1);

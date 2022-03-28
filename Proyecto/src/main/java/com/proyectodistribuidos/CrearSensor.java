@@ -40,8 +40,9 @@ public class CrearSensor{
 
             ZContext nuevoContext = new ZContext();
             ZMQ.Socket nuevoPublisher = nuevoContext.createSocket(SocketType.PUB);
+            
             //Socket con puerto
-			nuevoPublisher.bind("tcp://*:5556");
+			nuevoPublisher.bind("tcp://localhost:5556");
 			nuevoPublisher.bind("ipc://"+tipo);
             System.out.println("Canal creado");
 
@@ -50,7 +51,9 @@ public class CrearSensor{
                  //Generar lista de medidas
                  String message = sensor.generarMedidasString(sensor.generarMedidas());
                  Thread.sleep(sensor.getTiempo()); // Set the message time period
-                 nuevoPublisher.send(message);
+                 System.out.println(message);
+                 boolean send = nuevoPublisher.send(message,0);
+                 System.out.println(send);
             }
             nuevoContext.close();
         } catch (Exception e) {
