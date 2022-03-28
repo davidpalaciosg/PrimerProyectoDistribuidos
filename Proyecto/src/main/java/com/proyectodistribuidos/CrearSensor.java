@@ -10,9 +10,6 @@ import org.zeromq.ZContext;
 
 public class CrearSensor{
 
-    private org.zeromq.ZMQ.Context context;
-    private org.zeromq.ZMQ.Socket publisher;
-    private String connection;
     private static Sensor sensor;
 
     /*
@@ -29,7 +26,7 @@ public class CrearSensor{
             System.exit(1);
         }
         try {
-            String tipo = args[0];
+            String tipo = args[0].toLowerCase();
             int tiempo = Integer.parseInt(args[1]);
             String ubicacionArchivo = args[2];
 
@@ -39,11 +36,22 @@ public class CrearSensor{
             System.out.println("Sensor de " + tipo + " creado");
             
             //Crear publisher de topico tipo
-            new CrearSensor("ipc://"+tipo).run(null);
+            //new CrearSensor("ipc://"+tipo).run(null);
 
-             
-            
+            ZContext nuevoContext = new ZContext();
+            ZMQ.Socket nuevoPublisher = nuevoContext.createSocket(SocketType.PUB);
+            //Socket con puerto
+			nuevoPublisher.connect("tcp://*:5556");
+			nuevoPublisher.connect("ipc://"+tipo);
 
+            while(!Thread.currentThread().isInterrupted())
+			{
+                 //Generar lista de medidas
+                 String message = sensor.generarMedidasString(sensor.generarMedidas());
+                 Thread.sleep(sensor.getTiempo()); // Set the message time period
+                 nuevoPublisher.send(message);
+            }
+            nuevoContext.close();
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             System.exit(1);
@@ -92,34 +100,4 @@ public class CrearSensor{
         }
     }
 
-    public CrearSensor(String connection) {
-        this.connection = connection;
-    }
-
-    public void open() {
-        context = org.zeromq.ZMQ.context(1);
-        publisher = context.socket(SocketType.PUB);
-        publisher.bind(connection);
-    }
-
-    public void run(Object[] args) {
-        open();
-        System.out.println("Sensor is running");
-        while (!Thread.currentThread().isInterrupted()) {
-            try {
-                //Generar lista de medidas
-                String message = sensor.generarMedidasString(sensor.generarMedidas());
-                Thread.sleep(sensor.getTiempo()); // Set the message time period
-                publisher.send(message);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        close();
-    }
-
-    public void close() {
-        publisher.close();
-        context.term();
-    }
 }
