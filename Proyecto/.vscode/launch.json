@@ -10,8 +10,6 @@
             "request": "launch",
             "mainClass": "com.proyectodistribuidos.CrearSensor",
             "projectName": "Proyecto",
-            "args": "rgr asdasd"
-        
         },
         {
             "type": "java",

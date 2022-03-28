@@ -10,10 +10,7 @@ public abstract class Sensor {
     private float valorMinimo;
     private float valorMaximo;
 
-    // TODO Publicar medida de Sensor hacia Monitor
-    public boolean publicarMedida(ArrayList<String> medidasString) {
-        return false;
-    }
+    
 
     public Sensor(String tipo, int tiempo, ArchivoConfiguracion archivoConfiguracion) {
         this.tipo = tipo;

@@ -41,15 +41,15 @@ public class Medida {
     public String toString() {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
         String res="";
-        if(tipo.equalsIgnoreCase("Temperatura"))
+        if(tipo.equalsIgnoreCase("temperatura"))
         {
             res+="Temperatura: "+dato+"°F "+format.format(horaDeProduccion).toString()+"\n";
         }
-        else if(tipo.equalsIgnoreCase("PH"))
+        else if(tipo.equalsIgnoreCase("ph"))
         {
             res+="PH: "+dato+" "+format.format(horaDeProduccion).toString()+"\n";
         }
-        else if(tipo.equalsIgnoreCase("Oxigeno"))
+        else if(tipo.equalsIgnoreCase("oxigeno"))
         {
             res+="Oxigeno: "+dato+" Mg/L "+format.format(horaDeProduccion).toString()+"\n";
         }
