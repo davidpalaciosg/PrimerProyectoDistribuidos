@@ -7,7 +7,7 @@ public class CrearMonitor {
     /*
      * args:
      * [0]: tipo de monitor
-     * [1] : dirección ip:puerto del publisher
+     * [1] : dirección ip del publisher
      * 
      */
     public static void main(String[] args) {
@@ -26,8 +26,30 @@ public class CrearMonitor {
             // Socket conectado al puerto
             // Crea la conexión
 
-            String tcp = "tcp://" + direccion;
-            subscriber.connect(tcp);
+            String tcp="";
+            //Conectar por tipo
+
+            //Rango de 5555 a 5565
+            if(tipo.equals("temperatura")){
+                for (int i = 5555; i <= 5565; i++) {
+                    tcp = "tcp://" + direccion + ":" + i;
+                    subscriber.connect(tcp);
+                }
+            }
+            //Rango de 5566 a 5576
+            else if(tipo.equals("ph")){
+                for (int i = 5566; i <= 5576; i++) {
+                    tcp = "tcp://" + direccion + ":" + i;
+                    subscriber.connect(tcp);
+                }
+            }
+            //Rango de 5577 a 5587
+            else if(tipo.equals("oxigeno")){
+                for (int i = 5577; i <= 5587; i++) {
+                    tcp = "tcp://" + direccion + ":" + i;
+                    subscriber.connect(tcp);
+                }
+            }
 
             //El monitor crea el canal de comunicación (único)
             //String ipc = "ipc://" + tipo;
