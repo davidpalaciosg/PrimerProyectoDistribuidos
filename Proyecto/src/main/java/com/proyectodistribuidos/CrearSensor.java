@@ -26,6 +26,7 @@ public class CrearSensor {
         ZMQ.Context nuevoContext = ZMQ.context(1);
         ZMQ.Socket nuevoPublisher = nuevoContext.socket(SocketType.PUB);
         boolean exito = false;
+
         if (args.length != 3) {
             System.out.println("Error: Numero de argumentos incorrecto");
             System.exit(1);
@@ -40,10 +41,7 @@ public class CrearSensor {
             sensor = crearSensor(tipo, tiempo, archivo);
             System.out.println("Sensor de " + tipo + " creado");
 
-            // Crear publisher de tópico (tipo de sensor)
-
             // Conectar sockets
-
             if (tipo.equals("temperatura")) {
                 tcp = "tcp://*:5555";
             } else if (tipo.equals("ph")) {
@@ -52,10 +50,11 @@ public class CrearSensor {
                 tcp = "tcp://*:5577";
             }
 
+            // Crear publisher de tópico (tipo de sensor)
             nuevoPublisher.bind(tcp);
             String ipc = "ipc://" + tipo;
             nuevoPublisher.bind(ipc);
-            exito=true;
+            exito = true;
 
         } catch (Exception e) {
 
@@ -98,8 +97,10 @@ public class CrearSensor {
 
                 }
             }
-            System.out.println("Error: Todos los puertos del sensor " + tipo + " estan ocupados");
-            System.exit(1);
+            if (exito == false) {
+                System.out.println("Error: Todos los puertos del sensor " + tipo + " estan ocupados");
+                System.exit(1);
+            }
         } finally {
             if (exito == true) {
                 System.out.println("Generando medidas de " + tipo + "...");
