@@ -30,8 +30,8 @@ public class CrearMonitor {
             subscriber.connect(tcp);
 
             //El monitor crea el canal de comunicación (único)
-            String ipc = "ipc://" + tipo;
-            subscriber.bind(ipc);
+            //String ipc = "ipc://" + tipo;
+            ////subscriber.bind(ipc);
 
             System.out.println("Intentando conectar...");
             //Subscribir por tipo

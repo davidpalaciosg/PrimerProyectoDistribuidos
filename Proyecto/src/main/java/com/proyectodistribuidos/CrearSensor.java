@@ -6,8 +6,7 @@ import java.io.FileReader;
 import org.zeromq.SocketType;
 import org.zeromq.ZMQ;
 
-
-public class CrearSensor{
+public class CrearSensor {
 
     private static Sensor sensor;
 
@@ -18,47 +17,101 @@ public class CrearSensor{
      * -[2]: ubicación archivo de configuración
      */
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
+        String tipo = "";
+        int tiempo = 0;
+        String ubicacionArchivo = "";
+        String tcp = "";
+        ZMQ.Context nuevoContext = ZMQ.context(1);
+        ZMQ.Socket nuevoPublisher = nuevoContext.socket(SocketType.PUB);
+        boolean exito = false;
         if (args.length != 3) {
             System.out.println("Error: Numero de argumentos incorrecto");
             System.exit(1);
         }
         try {
-            String tipo = args[0].toLowerCase();
-            int tiempo = Integer.parseInt(args[1]);
-            String ubicacionArchivo = args[2];
+            tipo = args[0].toLowerCase();
+            tiempo = Integer.parseInt(args[1]);
+            ubicacionArchivo = args[2];
 
             // Crear archivo de configuración
             ArchivoConfiguracion archivo = creaArchivoConfiguracion(ubicacionArchivo);
             sensor = crearSensor(tipo, tiempo, archivo);
             System.out.println("Sensor de " + tipo + " creado");
-            
-            //Crear publisher de tópico (tipo de sensor)
-            
-            ZMQ.Context nuevoContext = ZMQ.context(1);
-            ZMQ.Socket nuevoPublisher = nuevoContext.socket(SocketType.PUB);
-            
-            //Conectar sockets
-            String tcp = "tcp://*:5555";
-			nuevoPublisher.connect(tcp);
 
-            String ipc = "ipc://" + tipo;
-			nuevoPublisher.connect(ipc);
+            // Crear publisher de tópico (tipo de sensor)
 
-            System.out.println("Generando medidas de " + tipo+"...");
-            while(!Thread.currentThread().isInterrupted())
-			{
-                 //Generar lista de medidas
-                 String message = sensor.generarMedidas();
-                 Thread.sleep(sensor.getTiempo()); // Set the message time period 
-                nuevoPublisher.send(message,0);
-                System.out.println(message);
+            // Conectar sockets
+
+            if (tipo.equals("temperatura")) {
+                tcp = "tcp://*:5555";
+            } else if (tipo.equals("ph")) {
+                tcp = "tcp://*:5566";
+            } else if (tipo.equals("oxigeno")) {
+                tcp = "tcp://*:5577";
             }
-            nuevoContext.close();
+
+            nuevoPublisher.bind(tcp);
+            String ipc = "ipc://" + tipo;
+            nuevoPublisher.bind(ipc);
+            exito=true;
+
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+
+            int puerto;
+
+            if (tipo.equalsIgnoreCase("temperatura")) {
+                puerto = 5555;
+                while (puerto <= 5565 && exito == false) {
+                    try {
+                        tcp = "tcp://*:" + puerto;
+                        nuevoPublisher.bind(tcp);
+                        exito = true;
+                    } catch (Exception e1) {
+                        puerto++;
+                    }
+
+                }
+            } else if (tipo.equalsIgnoreCase("ph")) {
+                puerto = 5566;
+                while (puerto <= 5576 && exito == false) {
+                    try {
+                        tcp = "tcp://*:" + puerto;
+                        nuevoPublisher.bind(tcp);
+                        exito = true;
+                    } catch (Exception e1) {
+                        puerto++;
+                    }
+
+                }
+            } else if (tipo.equalsIgnoreCase("oxigeno")) {
+                puerto = 5577;
+                while (puerto <= 5587 && exito == false) {
+                    try {
+                        tcp = "tcp://*:" + puerto;
+                        nuevoPublisher.bind(tcp);
+                        exito = true;
+                    } catch (Exception e1) {
+                        puerto++;
+                    }
+
+                }
+            }
+            System.out.println("Error: Todos los puertos del sensor " + tipo + " estan ocupados");
             System.exit(1);
+        } finally {
+            if (exito == true) {
+                System.out.println("Generando medidas de " + tipo + "...");
+                while (!Thread.currentThread().isInterrupted()) {
+                    // Generar lista de medidas
+                    String message = sensor.generarMedidas();
+                    Thread.sleep(sensor.getTiempo()); // Set the message time period
+                    nuevoPublisher.send(message, 0);
+                    System.out.println(message);
+                }
+                nuevoContext.close();
+            }
         }
 
     }
