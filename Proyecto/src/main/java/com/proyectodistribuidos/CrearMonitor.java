@@ -23,39 +23,12 @@ public class CrearMonitor {
             ZMQ.Context context =  ZMQ.context(1);
             // Socket SUB
             ZMQ.Socket subscriber = context.socket(SocketType.SUB);
-            // Socket conectado al puerto
-            // Crea la conexión
-
+            
             String tcp="";
-            //Conectar por tipo
-
-            //Rango de 5555 a 5565
-            if(tipo.equals("temperatura")){
-                for (int i = 5555; i <= 5565; i++) {
-                    tcp = "tcp://" + direccion + ":" + i;
-                    subscriber.connect(tcp);
-                }
-            }
-            //Rango de 5566 a 5576
-            else if(tipo.equals("ph")){
-                for (int i = 5566; i <= 5576; i++) {
-                    tcp = "tcp://" + direccion + ":" + i;
-                    subscriber.connect(tcp);
-                }
-            }
-            //Rango de 5577 a 5587
-            else if(tipo.equals("oxigeno")){
-                for (int i = 5577; i <= 5587; i++) {
-                    tcp = "tcp://" + direccion + ":" + i;
-                    subscriber.connect(tcp);
-                }
-            }
-
-            //El monitor crea el canal de comunicación (único)
-            //String ipc = "ipc://" + tipo;
-            ////subscriber.bind(ipc);
-
+            //Conectar a puertos por tipo
             System.out.println("Intentando conectar...");
+            conectarSocket(direccion, tipo, subscriber);
+
             //Subscribir por tipo
             subscriber.subscribe("".getBytes());
             
@@ -69,6 +42,34 @@ public class CrearMonitor {
             System.exit(1);
         }
 
+    }
+
+    private static void conectarSocket(String direccion, String tipo, ZMQ.Socket subscriber)
+    {
+        if(tipo.equalsIgnoreCase("temperatura"))
+        {
+            //Rango de 5555 a 5565
+            for (int i = 5555; i <= 5565; i++) {
+                String tcp = "tcp://" + direccion + ":" + i;
+                subscriber.connect(tcp);
+            }
+        }
+        else if(tipo.equalsIgnoreCase("ph"))
+        {
+            //Rango de 5566 a 5576
+            for (int i = 5566; i <= 5576; i++) {
+                String tcp = "tcp://" + direccion + ":" + i;
+                subscriber.connect(tcp);
+            }
+        }
+        else if(tipo.equalsIgnoreCase("oxigeno"))
+        {
+            //Rango de 5577 a 5587
+            for (int i = 5577; i <= 5587; i++) {
+                String tcp = "tcp://" + direccion + ":" + i;
+                subscriber.connect(tcp);
+            }
+        }
     }
 
 }
