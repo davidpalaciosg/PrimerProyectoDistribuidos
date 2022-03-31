@@ -1,4 +1,5 @@
 package com.proyectodistribuidos;
+
 import java.util.ArrayList;
 
 public abstract class Sensor {
@@ -9,8 +10,6 @@ public abstract class Sensor {
 
     private float valorMinimo;
     private float valorMaximo;
-
-    
 
     public Sensor(String tipo, int tiempo, ArchivoConfiguracion archivoConfiguracion) {
         this.tipo = tipo;
@@ -69,44 +68,54 @@ public abstract class Sensor {
 
     public String generarMedidas() {
 
-        String res="";
+        String res = "\n";
         // Crear numero aleatorio de medidas entre 10 y 100
         int cantMedidas = (int) ((Math.random() * (100 - 10)) + 10);
 
-        res+="Medidas generadas: "+cantMedidas+"\n";
-        res+="Correctas: "+cantMedidas * archivoConfiguracion.getValoresCorrectos()+"\n";
-        res+="Fuera de rango: "+cantMedidas * archivoConfiguracion.getValoresFueraDeRango()+"\n";
-        res+="Erroneas: "+cantMedidas * archivoConfiguracion.getErrores()+"\n";
-        res+="\n";
+        float correctos = cantMedidas * archivoConfiguracion.getValoresCorrectos();
+        float fueraDeRango = cantMedidas * archivoConfiguracion.getValoresFueraDeRango();
+        float errores = cantMedidas * archivoConfiguracion.getErrores();
+
+        res += "Medidas generadas: " + cantMedidas + "\n";
+        res += "Correctas: " + (int) correctos + " -> " + String.format("%.2f",archivoConfiguracion.getValoresCorrectos() * 100) + "%\n";
+        res += "Erroneas: " + (int) errores + " -> " + String.format("%.2f",archivoConfiguracion.getErrores() * 100) + "%\n";
+        res += "Fuera de rango: " + (int) fueraDeRango + " -> " + String.format("%.2f",archivoConfiguracion.getValoresFueraDeRango() * 100) + "%\n";
+        res += "\n";
         // Crear medidas válidas
-        for (int i = 0; i < cantMedidas * archivoConfiguracion.getValoresCorrectos(); i++) {
+        res+="Correctas:"+"\n";
+        for (int i = 0; i < (int) correctos; i++) {
             float dato = (float) (Math.random() * (valorMaximo - valorMinimo) + valorMinimo);
             Medida medida = new Medida(dato, tipo);
             // Insertar medida
-            res +=medida.toString();
+            res += medida.toString();
         }
+        res+="\n";
+        res+="Erroneas: "+"\n";
         // Crear medidas erroneas
-        for (int i = 0; i < cantMedidas * archivoConfiguracion.getErrores(); i++) {
+        for (int i = 0; i < (int) errores; i++) {
             float dato = (float) (Math.random() * (0 - -25) + -25); // Valores negativos
             Medida medida = new Medida(dato, tipo);
             // Insertar medida
-            res +=medida.toString();
+            res += medida.toString();
         }
         // Crear medidas fuera de rango
         // Medidas antes del valor mínimo [1-valorMinimo]
-        for (int i = 0; i < cantMedidas * archivoConfiguracion.getValoresFueraDeRango() / 2; i++) {
+        res+="\n";
+        res+="Fuera de rango: "+"\n";
+        for (int i = 0; i < (int) fueraDeRango / 2; i++) {
             float dato = (float) (Math.random() * (valorMinimo - 1) + 1);
             Medida medida = new Medida(dato, tipo);
             // Insertar medida
-            res +=medida.toString();
+            res += medida.toString();
         }
         // Medidas después del valor máximo [valorMaximo-valoraMaximo+25]
-        for (int i = 0; i < cantMedidas * archivoConfiguracion.getValoresFueraDeRango() / 2; i++) {
+        for (int i = 0; i < (int) fueraDeRango / 2; i++) {
             float dato = (float) (Math.random() * (valorMaximo + 25 - valorMaximo) + valorMaximo);
             Medida medida = new Medida(dato, tipo);
             // Insertar medida
-            res +=medida.toString();
+            res += medida.toString();
         }
+        res+="\n";
         return res;
     }
 }

@@ -124,15 +124,14 @@ public class CrearSensor {
             FileReader fr = new FileReader(filename);
             BufferedReader br = new BufferedReader(fr);
             String linea;
-            String[] datos;
+
             float[] datosFloat = new float[3];
 
-            linea = br.readLine();
-            datos = linea.split(",");
-            for (int i = 0; i < datos.length; i++) {
-                datosFloat[i] = Float.parseFloat(datos[1]);
-                i++;
+            for (int i = 0; i < 3; i++) {
+                linea = br.readLine();
+                datosFloat[i] = Float.parseFloat(linea);
             }
+            
             br.close();
             fr.close();
             return new ArchivoConfiguracion(datosFloat[0], datosFloat[1], datosFloat[2]);
