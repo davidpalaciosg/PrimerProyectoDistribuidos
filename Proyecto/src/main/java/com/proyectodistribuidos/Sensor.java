@@ -73,6 +73,11 @@ public abstract class Sensor {
         // Crear numero aleatorio de medidas entre 10 y 100
         int cantMedidas = (int) ((Math.random() * (100 - 10)) + 10);
 
+        res+="Medidas generadas: "+cantMedidas+"\n";
+        res+="Correctas: "+cantMedidas * archivoConfiguracion.getValoresCorrectos()+"\n";
+        res+="Fuera de rango: "+cantMedidas * archivoConfiguracion.getValoresFueraDeRango()+"\n";
+        res+="Erroneas: "+cantMedidas * archivoConfiguracion.getErrores()+"\n";
+        res+="\n";
         // Crear medidas válidas
         for (int i = 0; i < cantMedidas * archivoConfiguracion.getValoresCorrectos(); i++) {
             float dato = (float) (Math.random() * (valorMaximo - valorMinimo) + valorMinimo);

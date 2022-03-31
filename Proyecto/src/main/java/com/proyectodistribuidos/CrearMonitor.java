@@ -24,7 +24,6 @@ public class CrearMonitor {
             // Socket SUB
             ZMQ.Socket subscriber = context.socket(SocketType.SUB);
             
-            String tcp="";
             //Conectar a puertos por tipo
             System.out.println("Intentando conectar...");
             conectarSocket(direccion, tipo, subscriber);
