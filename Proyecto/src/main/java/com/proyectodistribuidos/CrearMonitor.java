@@ -1,5 +1,8 @@
 package com.proyectodistribuidos;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.zeromq.SocketType;
 import org.zeromq.ZMQ;
 
@@ -7,7 +10,7 @@ public class CrearMonitor {
     /*
      * args:
      * [0]: tipo de monitor
-     * [1] : dirección ip del publisher
+     * [1] : dirección ip del sensor publisher
      * 
      */
     public static void main(String[] args) {
@@ -17,10 +20,10 @@ public class CrearMonitor {
         }
         String tipo = args[0].toLowerCase();
         String direccion = args[1];
-        boolean exito = false;
+        boolean exitoPubHealth = false;
         String tcp = "";
         String ipc = "";
-        int puerto=0;
+        int puerto = 0;
         ZMQ.Context context = ZMQ.context(1);
         // Socket publisher hacia el Health Check
         ZMQ.Socket nuevoPublisherHealth = context.socket(SocketType.PUB);
@@ -40,20 +43,21 @@ public class CrearMonitor {
             nuevoPublisherHealth.bind(tcp);
             ipc = "ipc://" + tipo;
             nuevoPublisherHealth.bind(ipc);
-            exito = true;
+            exitoPubHealth = true;
 
         } catch (Exception e) {
 
             // Intentar abrir el publisher hacia el Health Check desde otro puerto
-            
+
             puerto = 5585;
-            //Desde el puerto 5585 al 5600 se crean los publishers de Monitores hacia el HealthCheck
-            while (puerto <= 5600 && exito == false) {
+            // Desde el puerto 5585 al 5600 se crean los publishers de Monitores hacia el
+            // HealthCheck
+            while (puerto <= 5600 && exitoPubHealth == false) {
                 try {
                     tcp = "tcp://*:" + puerto;
                     nuevoPublisherHealth.bind(tcp);
-                    //nuevoPublisherHealth.bind(ipc);
-                    exito = true;
+                    // nuevoPublisherHealth.bind(ipc);
+                    exitoPubHealth = true;
                 } catch (Exception e1) {
                     puerto++;
                 }
@@ -62,15 +66,21 @@ public class CrearMonitor {
             while ((!Thread.currentThread().isInterrupted())) {
                 String string = subscriber.recvStr();
                 System.out.println(string);
-                //Publicar hacia el Health Check
-                if(exito==true)
-                {
-                    System.out.println("Publicando hacia el Health Check mediante el puerto "+puerto);
-                    nuevoPublisherHealth.send(string, 0);
+                // Publicar hacia el Health Check
+                if (exitoPubHealth == true) {
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");  
+                    LocalDateTime now = LocalDateTime.now();  
+                    
+                    System.out.println("Publicando hacia el Health Check mediante el puerto " + puerto);
+                    long pid = ProcessHandle.current().pid();
+                    String msg = pid+" "+tipo+" "+dtf.format(now).toString()+" "+direccion;
+                    System.out.println("Publicando: "+msg);
+                    nuevoPublisherHealth.send(msg, 0);
                 }
 
                 // Enviar info a Health Check
             }
+            
             subscriber.close();
             nuevoPublisherHealth.close();
             context.close();
