@@ -4,14 +4,20 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
+import org.zeromq.SocketType;
+import org.zeromq.ZMQ;
+
 public class SistemaDeCalidad {
     // private static ArrayList<UsuarioRegistrado> usuariosRegistrados = new
     // ArrayList<>();
 
-    /*
-     * Menú de opciones:
-     * 1. Registrase
-     * 2. Iniciar sesión
+    /**
+     * Comunicación con CrearMonitor (Push - Pull)
+     * **Actúa como Pull (receptor, solo se encarga de recibir)
+     * Tiene un menú de opciones: 
+     * ** 1. Registrarse 
+     * ** 2. Iniciar sesión
+     * ** 3. Salir
      */
 
     public static void main(String[] args) {
@@ -71,21 +77,24 @@ public class SistemaDeCalidad {
             }
         } while (menu);
 
+        /**
+         * Contexto de canal de comunicación con el Monitor (CrearSensor)
+         */
+        try{
+            ZMQ.Context context =  ZMQ.context(1);
+            ZMQ.Socket pull = context.socket(SocketType.PULL);
+            pull.bind("tcp://*:5601");
+            while ((!Thread.currentThread().isInterrupted())) {
+                String string = pull.recvStr().trim();
+                System.out.println(string);
+            }
+        }catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            System.exit(1);
+        }
+
     }
-
-    /*
-     * public static boolean iniciarSesion(String usuario, String password) {
-     * for (UsuarioRegistrado usuarioRegistrado : usuariosRegistrados) {
-     * if (usuarioRegistrado.getUsuario().equals(usuario) &&
-     * usuarioRegistrado.getPassword().equals(password)) {
-     * return true;
-     * }
-     * }
-     * return false;
-     * }
-     */
-
     public void imprimirAlarma(String infoAlarma) {
         System.out.println(infoAlarma);
-    }
+    }    
 }

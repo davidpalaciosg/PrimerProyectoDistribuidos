@@ -11,6 +11,8 @@ public class CrearSensor {
     private static Sensor sensor;
 
     /*
+     * La clase tiene una conexión con CrearMonitor (Publisher - Subscriber): 
+     * ** Actúa como Subscriber (SUB)
      * Args:
      * -[0]: tipo de sensor
      * -[1]: tiempo de creación de medidas
@@ -28,7 +30,7 @@ public class CrearSensor {
         boolean exito = false;
 
         if (args.length != 3) {
-            System.out.println("Error: Numero de argumentos incorrecto");
+            System.out.println("Error: Número de argumentos incorrecto");
             System.exit(1);
         }
         try {
@@ -64,8 +66,7 @@ public class CrearSensor {
                 puerto = 5555;
                 while (puerto <= 5565 && exito == false) {
                     try {
-                        tcp = "tcp://localhost:" + puerto;
-                        //tcp = "tcp://*:" + puerto;
+                        tcp = "tcp://*:" + puerto;
                         nuevoPublisher.bind(tcp);
                         exito = true;
                     } catch (Exception e1) {
