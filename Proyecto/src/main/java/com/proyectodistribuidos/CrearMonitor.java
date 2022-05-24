@@ -50,8 +50,8 @@ public class CrearMonitor {
                         out.close();
                     }
                     catch (IOException e){
-                    System.out.println("Ha ocurrido un error. ");
-                    e.printStackTrace();
+                        System.out.println("Ha ocurrido un error. ");
+                        e.printStackTrace();
                     }
                 }
                 

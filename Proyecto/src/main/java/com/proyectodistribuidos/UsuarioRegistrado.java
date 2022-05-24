@@ -33,5 +33,12 @@ public class UsuarioRegistrado {
     public void setSalt(String salt){
         this.salt = salt;
     }
+
+    @Override
+    public String toString() {
+        return "name=" + usuario + 
+                ", hash=" + hash + 
+                ", salt=" + salt;
+    }
     
 }

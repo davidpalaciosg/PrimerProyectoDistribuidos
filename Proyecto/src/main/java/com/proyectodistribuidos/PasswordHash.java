@@ -23,6 +23,31 @@ public class PasswordHash {
         return itr + ": " + toHex(saltArr) + ":" + toHex(hashArr);  
     }  
 
+    public boolean comprobarPassword(String passwordAct, String saltBD, String hashBD) throws NoSuchAlgorithmException, InvalidKeySpecException{
+        try {
+            int iterations = 500;
+            byte[] salt = fromHex(saltBD);
+            byte[] hash = fromHex(hashBD);
+
+            PBEKeySpec spec = new PBEKeySpec(passwordAct.toCharArray(), salt, iterations, hash.length * 8);
+
+            SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+
+            byte[] testHash = skf.generateSecret(spec).getEncoded();
+                       
+            int diff = hash.length ^ testHash.length;
+            for(int i = 0; i < hash.length && i < testHash.length; i++) {
+                   diff |= hash[i] ^ testHash[i];
+            }
+
+            return diff == 0;
+
+         } catch (NumberFormatException e) {
+            System.out.println("NumberFormatException validando contraseña");
+            return false;
+         }
+    }
+
     // Salt   
     public byte[] obtenerSalt() throws NoSuchAlgorithmException{  
         SecureRandom secRand = SecureRandom.getInstance("SHA1PRNG");  
@@ -46,6 +71,17 @@ public class PasswordHash {
             return hexStr;  
         }  
     }  
+
+    //Convertir de hexadecimal
+    public byte[] fromHex(String hex) {
+
+        byte[] bytes = new byte[hex.length() / 2];
+        for(int i = 0; i<bytes.length ;i++) {
+            bytes[i] = (byte)Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
+        }
+
+        return bytes;
+    }
 
 
 }
