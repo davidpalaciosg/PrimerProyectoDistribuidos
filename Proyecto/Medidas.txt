@@ -1,0 +1,4 @@
+Temperatura: 68.91101 °F 00:07:15
+Temperatura: 79.9785 °F 00:07:20
+Temperatura: 79.70569 °F 00:07:25
+Temperatura: 80.57079 °F 00:07:30

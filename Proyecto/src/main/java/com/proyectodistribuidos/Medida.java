@@ -43,7 +43,7 @@ public class Medida {
         String res="";
         if(tipo.equalsIgnoreCase("temperatura"))
         {
-            res+="Temperatura: "+dato+"°F "+format.format(horaDeProduccion).toString()+"\n";
+            res+="Temperatura: "+dato+" °F "+format.format(horaDeProduccion).toString()+"\n";
         }
         else if(tipo.equalsIgnoreCase("ph"))
         {

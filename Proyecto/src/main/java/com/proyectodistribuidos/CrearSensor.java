@@ -64,7 +64,8 @@ public class CrearSensor {
                 puerto = 5555;
                 while (puerto <= 5565 && exito == false) {
                     try {
-                        tcp = "tcp://*:" + puerto;
+                        tcp = "tcp://localhost:" + puerto;
+                        //tcp = "tcp://*:" + puerto;
                         nuevoPublisher.bind(tcp);
                         exito = true;
                     } catch (Exception e1) {
@@ -103,10 +104,10 @@ public class CrearSensor {
             }
         } finally {
             if (exito == true) {
-                System.out.println("Generando medidas de " + tipo + "...");
+                System.out.println("Generando medidas de " + tipo + "..." + "\n");
                 while (!Thread.currentThread().isInterrupted()) {
                     // Generar lista de medidas
-                    String message = sensor.generarMedidas();
+                    String message = sensor.generarMedida();
                     Thread.sleep(sensor.getTiempo()); // Set the message time period
                     nuevoPublisher.send(message, 0);
                     System.out.println(message);

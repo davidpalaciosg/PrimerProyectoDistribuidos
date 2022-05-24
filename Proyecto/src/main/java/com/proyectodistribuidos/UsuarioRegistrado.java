@@ -1,11 +1,13 @@
 package com.proyectodistribuidos;
 public class UsuarioRegistrado {
     private String usuario;
-    private String password;
+    private String hash;
+    private String salt;
 
-    public UsuarioRegistrado(String usuario, String password) {
+    public UsuarioRegistrado(String usuario, String hash, String salt) {
         this.usuario = usuario;
-        this.password = password;
+        this.hash = hash;
+        this.salt = salt;
     }
 
     public String getUsuario() {
@@ -16,12 +18,20 @@ public class UsuarioRegistrado {
         this.usuario = usuario;
     }
 
-    public String getPassword() {
-        return password;
+    public String getHash() {
+        return hash;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    public String getSalt (){
+        return salt;
+    }
+
+    public void setSalt(String salt){
+        this.salt = salt;
     }
     
 }

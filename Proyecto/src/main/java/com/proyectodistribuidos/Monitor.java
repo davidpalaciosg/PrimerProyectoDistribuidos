@@ -6,6 +6,10 @@ public class Monitor {
     private String tipo;
     private ArrayList<Alarma> alarmas;
 
+    public Monitor(){
+
+    }
+
     public Monitor(String tipo) {
         this.tipo = tipo;
         this.alarmas = new ArrayList<Alarma>();
