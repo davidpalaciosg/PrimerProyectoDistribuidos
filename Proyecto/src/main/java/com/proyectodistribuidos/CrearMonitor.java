@@ -73,8 +73,10 @@ public class CrearMonitor {
                         e.printStackTrace();
                     }
                 }
-                
-                push.send("Conexiónnnnnn xd");
+                Alarma alarma = alarmaGenerada(tipoA, dato);
+                if (alarma.getTipo() != null){
+                    push.send(alarma.toString());
+                }
 
             }
             context.close();
@@ -87,7 +89,6 @@ public class CrearMonitor {
     /**
      * Método para establecer las conexiones con CrearSensor
      */
-
     private static void conectarSocket(String direccion, String tipo, ZMQ.Socket subscriber)
     {
         if(tipo.equalsIgnoreCase("temperatura"))
@@ -115,4 +116,23 @@ public class CrearMonitor {
             }
         }
     }    
+
+    private static Alarma alarmaGenerada (String tipo, float dato){
+        Alarma alarmaG = new Alarma(null, -1000);
+        if (tipo.equalsIgnoreCase("temperatura")){
+            if ((dato < 68) || (dato > 89)){//fuera de rango
+                alarmaG = new Alarma(tipo, dato);
+            }
+        } else if (tipo.equalsIgnoreCase("oxigeno")){
+            if ((dato < 6) || (dato > 8)){//fuera de rango
+                alarmaG = new Alarma(tipo, dato);
+            }
+        } else if (tipo.equalsIgnoreCase("ph")){
+            if ((dato < 2) || (dato > 11)){//fuera de rango
+                alarmaG = new Alarma(tipo, dato);
+            }
+        }
+        return alarmaG;
+    }
+
 }
