@@ -13,16 +13,18 @@ public class HealthCheck {
 
     // Lista que guarda los monitores registrados en el Health Check
     private static ArrayList<InfoMonitorHealthCheck> listaMonitores;
+    private static int tiempoHilo;
 
     public static void main(String[] args) throws IOException {
-        if (args.length == 0) {
-            System.out.println("Debe ingresar al menos la dirección IP de un servidor de monitores");
+        if (args.length != 1) {
+            System.out.println("Debe ingresar el tiempo de espera en ms para revisar el estado de los monitores");
             System.exit(1);
         }
 
         ZMQ.Context context = ZMQ.context(1);
         // Socket subscriberMonitor de monitores
         ZMQ.Socket subscriberMonitor = context.socket(SocketType.SUB);
+        tiempoHilo = Integer.parseInt(args[0]);
 
         listaMonitores = new ArrayList<>();
         // Hilo que verifica si todos los monitores estan activos cada 3 segundos
@@ -32,14 +34,11 @@ public class HealthCheck {
         try {
             // Conectar a todos los monitores que lleguen por parámetro
             System.out.println("Intentando conectar a monitores");
-            for (int i = 0; i < args.length; i++) {
-                // El health check se conecta a TODOS los monitores que lleguen por parámetro
-                if (isIPV4(args[i])) // Si es una dirección IP bien escrita
-                {
-                    System.out.println("Conectando a " + args[i]);
-                    suscribirseAMonitor(args[i], subscriberMonitor); // Conectarse a todos los monitores
-                }
-            }
+
+            // El health check se conecta a TODOS los monitores de localhost
+            System.out.println("Conectando a " + "localhost");
+            suscribirseAMonitor("localhost", subscriberMonitor); // Conectarse a todos los monitores
+
             subscriberMonitor.subscribe("".getBytes());
 
         } catch (Exception e) {
@@ -61,7 +60,7 @@ public class HealthCheck {
                 // Si el monitor no está en la lista, lo agrega
                 int index = getMonitorByPid(pid);
                 if (index == -1) {
-                    InfoMonitorHealthCheck info = new InfoMonitorHealthCheck(pid, tipo, tiempo,ip);
+                    InfoMonitorHealthCheck info = new InfoMonitorHealthCheck(pid, tipo, tiempo, ip);
                     listaMonitores.add(info);
                     System.out.println("Se registró el monitor " + pid + " al Health Check para la ip " + ip);
                 } else {
@@ -124,9 +123,8 @@ public class HealthCheck {
         if (procesosVivos != null) {
             for (InfoMonitorHealthCheck info : listaMonitores) {
                 // Si el proceso murió, crea un nuevo proceso
-                if (!procesosVivos.contains(info.getPidMonitor())) {
-                    if(info.isVivo())
-                    {
+                if (info.isVivo()) {
+                    if (!procesosVivos.contains(info.getPidMonitor())) {
                         System.out.println("El proceso " + info.getPidMonitor() + " murió");
                         info.setVivo(false);
                         // Crear nuevo proceso TODO
@@ -154,12 +152,12 @@ public class HealthCheck {
                 while (true) {
                     try {
                         // En él, hacemos que el hilo duerma
-                        Thread.sleep(3000);
+                        Thread.sleep(tiempoHilo);
                         // Y después realizamos las operaciones
-                        //System.out.println("Verificando si los monitores están activos");
+                        // System.out.println("Verificando si los monitores están activos");
                         estanVivosLosMonitores();
                         // Así, se da la impresión de que se ejecuta cada cierto tiempo
-                        //Thread.currentThread().interrupt();
+                        // Thread.currentThread().interrupt();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
