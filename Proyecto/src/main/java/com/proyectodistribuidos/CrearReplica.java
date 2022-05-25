@@ -91,6 +91,8 @@ public class CrearReplica {
             /**
              * Contexto de canal de comunicación con el Sistema de calidad
              */
+            // Socket push hacia Sistema de Calidad
+            pushCalidad.connect("tcp://" + ipSistemaDeCalidad + ":5601");
 
             while ((!Thread.currentThread().isInterrupted())) {
 
@@ -152,15 +154,17 @@ public class CrearReplica {
 
     private static Alarma alarmaGenerada(String tipo, float dato) {
         Alarma alarmaG = new Alarma(null, -1000);
-        if (tipo.equalsIgnoreCase("temperatura")) {
+        StringTokenizer token = new StringTokenizer(tipo, ": ");
+        String tipoS = token.nextToken();
+        if (tipoS.equalsIgnoreCase("temperatura")) {
             if ((dato < 68) || (dato > 89) || dato < 0) {// fuera de rango
                 alarmaG = new Alarma(tipo, dato);
             }
-        } else if (tipo.equalsIgnoreCase("oxigeno")) {
+        } else if (tipoS.equalsIgnoreCase("oxigeno")) {
             if ((dato < 6) || (dato > 8) || dato < 0) {// fuera de rango
                 alarmaG = new Alarma(tipo, dato);
             }
-        } else if (tipo.equalsIgnoreCase("ph")) {
+        } else if (tipoS.equalsIgnoreCase("ph")) {
             if ((dato < 2) || (dato > 11) || dato < 0) {// fuera de rango
                 alarmaG = new Alarma(tipo, dato);
             }

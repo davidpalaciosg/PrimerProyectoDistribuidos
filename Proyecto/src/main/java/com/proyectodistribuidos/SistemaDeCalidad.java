@@ -43,8 +43,10 @@ public class SistemaDeCalidad {
                     String passwordIngresada = scan.next();
                     if (controladorUsuario.registrarUsuario(nombreUsuario, passwordIngresada)) {
                         System.out.println("El registro se realizo correctamente. ");
+                        menu = false;
+                    } else {
+                        System.exit(1);
                     }
-                    menu = false;
                     break;
                 case 2:
                     System.out.println("\nInicio sesion\n");
@@ -55,11 +57,14 @@ public class SistemaDeCalidad {
                     String password = scan.next();
                     if (controladorUsuario.autenticarUsuario(usuario, password) == true) {
                         System.out.println("Se ha ingresado existosamente!");
+                        menu = false;
+                    } else {
+                        System.exit(1);
                     }
-                    menu = false;
                     break;
                 case 3:
                     menu = false;
+                    System.exit(0);
                     break;
                 default:
                     System.out.println("\n\t\t La opción " + opcion + " no es válida :( \n");
@@ -70,6 +75,7 @@ public class SistemaDeCalidad {
                         menu = true;
                     } else {
                         menu = false;
+                        System.exit(1);
                     }
                     break;
             }
