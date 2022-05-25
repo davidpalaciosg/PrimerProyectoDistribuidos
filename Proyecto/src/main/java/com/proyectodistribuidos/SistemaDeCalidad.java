@@ -98,16 +98,21 @@ public class SistemaDeCalidad {
             pull.bind("tcp://*:5601");
             while ((!Thread.currentThread().isInterrupted())) {
                 String string = pull.recvStr().trim();
-                System.out.println(string);
                 String parts[] = string.split(" ");
                 String tipo = parts[0];
+                float dato = Float.parseFloat(parts[1]);
                 String tiempo = parts[2];
+                Medida nuevaMedida = new Medida(dato,tipo);
+                if(!nuevaMedida.verificarMedida())
+                {
+                    System.out.println(string);
+                }
 
                 try {
                     calcularYAgregarTiempoLlegadaMonitor(tiempo, tipo);
                 } catch (Exception e) {
                     System.out
-                            .println("Error al calcular el tiempo entre la salida del sensor y la entrada al monitor");
+                            .println("Error al calcular el tiempo entre la salida del monitor y la entrada al sistema de calidad");
                 }
             }
 
@@ -125,15 +130,12 @@ public class SistemaDeCalidad {
     }
 
     private static void calcularYAgregarTiempoLlegadaMonitor(String tiempoSensor, String tipo) {
-        // Borrar ultimo caracter : de tipo sensor
-        StringBuffer sb = new StringBuffer(tipo);
-        // invoking the method
-        sb.deleteCharAt(sb.length() - 1);
+
 
         // Obtener el tiempo actual
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
 
-        String fileName = "tiemposDeLlegadaMonitorSistemaCalidad" + sb + ".txt";
+        String fileName = "tiemposDeLlegadaMonitorSistemaCalidad" + tipo + ".txt";
         try {
             // Convertir el tiempo del sensor a Date
             Date fechaSensor = formatter.parse(tiempoSensor);

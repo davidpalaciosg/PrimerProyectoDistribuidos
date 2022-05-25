@@ -52,4 +52,21 @@ public class Medida {
         return res;
     }
 
+    public boolean verificarMedida() {
+        if (tipo.equalsIgnoreCase("temperatura")) {
+            if (!((int)dato >= 68 && (int)dato >= 89)) {// fuera de rango
+                return false;
+            }
+        } else if (tipo.equalsIgnoreCase("ph")) {
+            if (!((int)dato >= 2 && (int)dato <= 11)) {// fuera de rango
+                return false;
+            }
+        } else if (tipo.equalsIgnoreCase("oxigeno")) {
+            if (!((int)dato >= 6 && (int)dato <= 8)) {// fuera de rango
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

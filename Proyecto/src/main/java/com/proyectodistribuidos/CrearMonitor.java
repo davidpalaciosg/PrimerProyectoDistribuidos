@@ -122,6 +122,7 @@ public class CrearMonitor {
                 String tipoA = parts[0];
                 Float dato = Float.parseFloat(parts[1]);
                 String tiempoSensor = parts[3];
+                Medida nuevaMedida = new Medida(dato, tipo);
                 if (dato >= 0) {
                     String fileName = "Medidas.txt";
                     try {
@@ -145,9 +146,9 @@ public class CrearMonitor {
                 }
 
                 //Generar alarma
-                if(isWrong(tipoA,dato))
+                if(!nuevaMedida.verificarMedida())
                 {
-                    Alarma nuevaAlarma = new Alarma(tipo,dato,new Date());
+                    Alarma nuevaAlarma = new Alarma(nuevaMedida.getTipo(),nuevaMedida.getDato(),new Date());
                     push.send(nuevaAlarma.toString());
                 }
                
@@ -248,22 +249,4 @@ public class CrearMonitor {
         }
     }
 
-    private static boolean isWrong(String tipo, float dato)
-    {
-        boolean wrong = false;
-        if (tipo.equalsIgnoreCase("temperatura:")) {
-            if (!(dato>=68 && dato>=89)) {// fuera de rango
-                wrong = true;
-            }
-        } else if (tipo.equalsIgnoreCase("oxigeno:")) {
-            if (!(dato>=6 && dato>=8)) {// fuera de rango
-                wrong = true;
-            }
-        } else if (tipo.equalsIgnoreCase("ph:")) {
-            if (!(dato>=2 &&dato>=11)) {// fuera de rango
-                wrong = true;
-            }
-        }
-        return wrong;
-    }
 }
