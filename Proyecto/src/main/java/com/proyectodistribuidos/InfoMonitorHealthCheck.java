@@ -1,7 +1,5 @@
 package com.proyectodistribuidos;
 
-import java.sql.Date;
-
 public class InfoMonitorHealthCheck {
     private String pidMonitor;
     private String tipoMonitor;
@@ -13,6 +11,15 @@ public class InfoMonitorHealthCheck {
         this.tipoMonitor = tipoMonitor;
         this.fechaDeIngreso = fechaDeIngreso;
         this.vivo = true;
+        this.ipSensor = ipSensor;
+    }
+
+    
+    
+    public String getIpSensor() {
+        return ipSensor;
+    }
+    public void setIpSensor(String ipSensor) {
         this.ipSensor = ipSensor;
     }
     public String getPidMonitor() {

@@ -2,8 +2,6 @@ package com.proyectodistribuidos;
 
 import java.security.*;  
 import java.math.BigInteger;  
-import java.security.MessageDigest;  
-import java.nio.charset.StandardCharsets;  
 import javax.crypto.spec.PBEKeySpec;   
 import javax.crypto.SecretKeyFactory;  
 import java.security.spec.InvalidKeySpecException;  

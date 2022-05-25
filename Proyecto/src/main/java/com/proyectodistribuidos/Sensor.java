@@ -72,7 +72,7 @@ public abstract class Sensor {
 
         float probaCorrectos = archivoConfiguracion.getValoresCorrectos();
         float probaFueraDeRango = archivoConfiguracion.getValoresFueraDeRango();
-        float probaErrores =  archivoConfiguracion.getErrores();
+        //float probaErrores =  archivoConfiguracion.getErrores();
 
         float proba = (float) (Math.random()); //Función genera número aleatorio entre 0.0 - 1.0
         if (proba <= probaCorrectos ) {

@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.stream.Stream;
 
 import org.zeromq.SocketType;
 import org.zeromq.ZMQ;
@@ -81,15 +80,7 @@ public class HealthCheck {
             subscriberMonitor.connect(tcp);
         }
     }
-
-    private static boolean isIPV4(String ip) {
-        String IPV4_PATTERN = "^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\\.(?!$)|$)){4}$";
-        if (ip.matches(IPV4_PATTERN) || ip.equals("localhost")) {
-            return true;
-        }
-        return false;
-    }
-
+    
     private static ArrayList<String> getProcesosVivos() {
         // Solo vale la pena hacerlo si hay monitores registrados
         if (listaMonitores.size() > 0) {
