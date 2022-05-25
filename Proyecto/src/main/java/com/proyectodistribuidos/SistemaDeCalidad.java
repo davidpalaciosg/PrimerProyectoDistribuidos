@@ -1,8 +1,6 @@
 package com.proyectodistribuidos;
 
-import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.StringTokenizer;
 
 import org.zeromq.SocketType;
 import org.zeromq.ZMQ;
@@ -92,6 +90,9 @@ public class SistemaDeCalidad {
             System.out.println("Error: " + e.getMessage());
             System.exit(1);
         }
-
-    } 
+        scan.close();
+    }
+    public void imprimirAlarma(String infoAlarma) {
+        System.out.println(infoAlarma);
+    }    
 }

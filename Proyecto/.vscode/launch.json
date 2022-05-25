@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch SistemaDeCalidad",
+            "request": "launch",
+            "mainClass": "com.proyectodistribuidos.SistemaDeCalidad",
+            "projectName": "Proyecto"
+        },
+        {
+            "type": "java",
+            "name": "Launch HealthCheck",
+            "request": "launch",
+            "mainClass": "com.proyectodistribuidos.HealthCheck",
+            "projectName": "Proyecto"
+        },
+        {
+            "type": "java",
             "name": "Launch Prueba",
             "request": "launch",
             "mainClass": "com.proyectodistribuidos.Prueba",
