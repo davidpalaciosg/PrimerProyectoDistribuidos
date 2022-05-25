@@ -33,7 +33,7 @@ public class GestionarUsuario {
         BufferedReader br = null;
         // Abrir archivo de texto
         try {
-            archivo = new File("Proyecto/src/main/java/com/proyectodistribuidos/usuarios.txt");
+            archivo = new File("usuarios.txt");
             fr = new FileReader(archivo);
             br = new BufferedReader(fr);
             String linea;
@@ -116,7 +116,7 @@ public class GestionarUsuario {
      * Método que escribe en el archivo de txt el usuario nuevo.
      */
     public void escribirUsuario(String usuario){
-        String fileName = "Proyecto/src/main/java/com/proyectodistribuidos/usuarios.txt";
+        String fileName = "usuarios.txt";
         try {
             FileWriter fstream = new FileWriter(fileName, true);
             BufferedWriter out = new BufferedWriter(fstream);
