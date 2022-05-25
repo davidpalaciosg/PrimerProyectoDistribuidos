@@ -1,6 +1,7 @@
 package com.proyectodistribuidos;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -223,13 +224,14 @@ public class CrearMonitor {
 
         // Obtener el tiempo actual
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
-        LocalDateTime now = LocalDateTime.now();
-        String nowDate = now.getHour() + ":" + now.getMinute() + ":" + now.getSecond();
+
         String fileName = "tiemposDeLlegada"+sb+".txt";
         try {
             // Convertir el tiempo del sensor a Date
             Date fechaSensor = formatter.parse(tiempoSensor);
-            Date fechaNow = formatter.parse(nowDate);
+            String fechaNowString = formatter.format(new Date());
+            Date fechaNow = formatter.parse(fechaNowString);
+            
 
             //System.out.println(fechaNow.getTime());
             //System.out.println(fechaSensor.getTime());
@@ -238,7 +240,7 @@ public class CrearMonitor {
             BufferedWriter out = new BufferedWriter(fstream);
             out.write(tipo + " " + diference + "\n");
             out.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("Ha ocurrido un error. ");
             e.printStackTrace();
         }
