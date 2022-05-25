@@ -39,7 +39,6 @@ public class CrearMonitor {
         ZMQ.Socket nuevoPublisherHealth = context.socket(SocketType.PUB);
         // Socket subscriber de sensor
         ZMQ.Socket subscriber = context.socket(SocketType.SUB);
-
         // Socket push hacia Sistema de Calidad
         ZMQ.Socket push = context.socket(SocketType.PUSH);
         boolean exitoPushCalidad = false;
@@ -51,18 +50,10 @@ public class CrearMonitor {
                 System.out.println("Error: Número de argumentos incorrecto");
                 System.exit(1);
             }
-
-            
-
             /**
              * Contexto de canal de comunicación con los sensores y el sistema de Calidad
              */
             try {
-
-                /**
-                 * Contexto de canal de comunicación con CrearSensor
-                 */
-
                 // Conectar a puertos por tipo
                 System.out.println("Intentando conectar...");
                 conectarSocket(direccion, tipo, subscriber);
@@ -84,7 +75,6 @@ public class CrearMonitor {
             } catch (Exception e) {
 
                 // Intentar abrir el publisher hacia el Health Check desde otro puerto
-
                 if (!exitoPubHealth) {
                     puerto = 5585;
                     // Desde el puerto 5585 al 5600 se crean los publishers de Monitores hacia el
@@ -100,31 +90,30 @@ public class CrearMonitor {
                         }
                     }
                     /*
-                    if (!exitoPushCalidad) {
-                        puerto = 5601;
-                        while (puerto <= 5610 && exitoPushCalidad == false) {
-                            try {
-                                push.connect("tcp://" + direccionSC + ":" + puerto);
-                                exitoPushCalidad = true;
-                            } catch (Exception e1) {
-                                puerto++;
-                            }
-                        }
-                    }
-                    */
+                     * if (!exitoPushCalidad) {
+                     * puerto = 5601;
+                     * while (puerto <= 5610 && exitoPushCalidad == false) {
+                     * try {
+                     * push.connect("tcp://" + direccionSC + ":" + puerto);
+                     * exitoPushCalidad = true;
+                     * } catch (Exception e1) {
+                     * puerto++;
+                     * }
+                     * }
+                     * }
+                     */
                 }
             }
         } finally {
 
-            /**
-             * Contexto de canal de comunicación con el Sistema de calidad
-             */
-
+            // Socket push hacia Sistema de Calidad
+            push.connect("tcp://" + direccionSC + ":5601");
+            exitoPushCalidad = true;
             while ((!Thread.currentThread().isInterrupted())) {
                 String string = subscriber.recvStr().trim();
                 System.out.println(string);
 
-                //Escribe en el archivo de Medidas correctas y fuera de rango
+                // Escribe en el archivo de Medidas correctas y fuera de rango
                 StringTokenizer token = new StringTokenizer(string, " ");
                 String tipoA = token.nextToken();
                 float dato = Float.valueOf(token.nextToken());
@@ -140,10 +129,9 @@ public class CrearMonitor {
                         e.printStackTrace();
                     }
                 }
-                //Genera alarma y envía al sistema de calidad
-                Alarma alarma = alarmaGenerada(tipoA, dato);
-                if (alarma.getTipo() != null) {
-                    push.send(alarma.toString());
+                if (alarmaGenerada(tipoA, dato)==true) {
+                    System.out.println("ENTRA A ENVIAR");
+                    push.send(string);
                 }
 
                 // Publicar hacia el Health Check
@@ -159,7 +147,6 @@ public class CrearMonitor {
                 }
 
             }
-
             subscriber.close();
             nuevoPublisherHealth.close();
             push.close();
@@ -192,21 +179,25 @@ public class CrearMonitor {
         }
     }
 
-    private static Alarma alarmaGenerada(String tipo, float dato) {
-        Alarma alarmaG = new Alarma(null, -1000);
-        if (tipo.equalsIgnoreCase("temperatura")) {
-            if ((dato < 68) || (dato > 89)||dato<0) {// fuera de rango
-                alarmaG = new Alarma(tipo, dato);
+    private static boolean alarmaGenerada(String tipo, float dato) {
+        boolean alarmaG = false;
+        StringTokenizer token = new StringTokenizer(tipo, ": ");
+        String tipoS = token.nextToken();
+        if (tipoS.equalsIgnoreCase("temperatura")) {
+            System.out.println("Comparando en Monitor EXITO ");
+            if ((dato < 68) || (dato > 89) || dato < 0) {// fuera de rango
+                alarmaG = true;
             }
         } else if (tipo.equalsIgnoreCase("oxigeno")) {
-            if ((dato < 6) || (dato > 8)||dato<0) {// fuera de rango
-                alarmaG = new Alarma(tipo, dato);
+            if ((dato < 6) || (dato > 8) || dato < 0) {// fuera de rango
+                alarmaG = true;
             }
         } else if (tipo.equalsIgnoreCase("ph")) {
-            if ((dato < 2) || (dato > 11)||dato<0) {// fuera de rango
-                alarmaG = new Alarma(tipo, dato);
+            if ((dato < 2) || (dato > 11) || dato < 0) {// fuera de rango
+                alarmaG = true;
             }
         }
+        System.out.println("Devuelve: " + alarmaG);
         return alarmaG;
     }
 
