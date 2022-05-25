@@ -75,17 +75,23 @@ public abstract class Sensor {
         //float probaErrores =  archivoConfiguracion.getErrores();
 
         float proba = (float) (Math.random()); //Función genera número aleatorio entre 0.0 - 1.0
-        if (proba <= probaCorrectos ) {
+
+        if (proba>=0 && proba <= probaCorrectos ) {
+            //Medida correcta
             float dato = (float) (Math.random() * (valorMaximo - valorMinimo) + valorMinimo);
             Medida medida = new Medida(dato, tipo);
             // Insertar medida
             res += medida.toString();
-        } else if (proba <= probaFueraDeRango + probaCorrectos){
+
+            
+        } else if (proba >probaCorrectos && proba <= (probaCorrectos + probaFueraDeRango)) {
+            //Medida fuera de rango
             float dato = (float) (Math.random() * (valorMaximo + 25 - valorMaximo) + valorMaximo);//No sé cómo generar uno
             Medida medida = new Medida(dato, tipo);
             // Insertar medida
             res += medida.toString();
         } else {
+            //Medida con error
             float dato = (float) (Math.random() * (0 - -25) + -25); // Valores negativos
             Medida medida = new Medida(dato, tipo);
             // Insertar medida
