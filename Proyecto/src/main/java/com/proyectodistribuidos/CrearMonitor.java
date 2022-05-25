@@ -129,9 +129,9 @@ public class CrearMonitor {
                         e.printStackTrace();
                     }
                 }
-                if (alarmaGenerada(tipoA, dato)==true) {
-                    System.out.println("ENTRA A ENVIAR");
-                    push.send(string);
+                Alarma alarma = alarmaGenerada(tipoA, dato);
+                if (alarma.getTipo() != null) {
+                    push.send(alarma.toString());
                 }
 
                 // Publicar hacia el Health Check
@@ -179,25 +179,24 @@ public class CrearMonitor {
         }
     }
 
-    private static boolean alarmaGenerada(String tipo, float dato) {
-        boolean alarmaG = false;
+    private static Alarma alarmaGenerada(String tipo, float dato) {
+        Alarma alarmaG = new Alarma(null, -1000);
         StringTokenizer token = new StringTokenizer(tipo, ": ");
         String tipoS = token.nextToken();
         if (tipoS.equalsIgnoreCase("temperatura")) {
             System.out.println("Comparando en Monitor EXITO ");
             if ((dato < 68) || (dato > 89) || dato < 0) {// fuera de rango
-                alarmaG = true;
+                alarmaG = new Alarma(tipo, dato);
             }
-        } else if (tipo.equalsIgnoreCase("oxigeno")) {
+        } else if (tipoS.equalsIgnoreCase("oxigeno")) {
             if ((dato < 6) || (dato > 8) || dato < 0) {// fuera de rango
-                alarmaG = true;
+                alarmaG = new Alarma(tipo, dato);
             }
-        } else if (tipo.equalsIgnoreCase("ph")) {
+        } else if (tipoS.equalsIgnoreCase("ph")) {
             if ((dato < 2) || (dato > 11) || dato < 0) {// fuera de rango
-                alarmaG = true;
+                alarmaG = new Alarma(tipo, dato);
             }
         }
-        System.out.println("Devuelve: " + alarmaG);
         return alarmaG;
     }
 
