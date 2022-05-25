@@ -1,6 +1,12 @@
 package com.proyectodistribuidos;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
+
+import javax.naming.Context;
 
 import org.zeromq.SocketType;
 import org.zeromq.ZMQ;
@@ -12,8 +18,8 @@ public class SistemaDeCalidad {
     /**
      * Comunicación con CrearMonitor (Push - Pull)
      * **Actúa como Pull (receptor, solo se encarga de recibir)
-     * Tiene un menú de opciones: 
-     * ** 1. Registrarse 
+     * Tiene un menú de opciones:
+     * ** 1. Registrarse
      * ** 2. Iniciar sesión
      * ** 3. Salir
      */
@@ -84,21 +90,64 @@ public class SistemaDeCalidad {
         /**
          * Contexto de canal de comunicación con el Monitor (CrearSensor)
          */
-        try{
-            ZMQ.Context context =  ZMQ.context(1);
+        try {
+            ZMQ.Context context = ZMQ.context(1);
             ZMQ.Socket pull = context.socket(SocketType.PULL);
             pull.bind("tcp://*:5601");
             while ((!Thread.currentThread().isInterrupted())) {
                 String string = pull.recvStr().trim();
                 System.out.println(string);
+                String parts[] = string.split(" ");
+                String tipo = parts[0];
+                String tiempo = parts[2];
+
+                try {
+                    calcularYAgregarTiempoLlegadaMonitor(tiempo, tipo);
+                } catch (Exception e) {
+                    System.out
+                            .println("Error al calcular el tiempo entre la salida del sensor y la entrada al monitor");
+                }
             }
-        }catch (Exception e) {
+
+            pull.close();
+            context.close();
+        } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             System.exit(1);
         }
         scan.close();
     }
+
     public void imprimirAlarma(String infoAlarma) {
         System.out.println(infoAlarma);
-    }    
+    }
+
+    private static void calcularYAgregarTiempoLlegadaMonitor(String tiempoSensor, String tipo) {
+        // Borrar ultimo caracter : de tipo sensor
+        StringBuffer sb = new StringBuffer(tipo);
+        // invoking the method
+        sb.deleteCharAt(sb.length() - 1);
+
+        // Obtener el tiempo actual
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
+
+        String fileName = "tiemposDeLlegadaMonitorSistemaCalidad" + sb + ".txt";
+        try {
+            // Convertir el tiempo del sensor a Date
+            Date fechaSensor = formatter.parse(tiempoSensor);
+            String fechaNowString = formatter.format(new Date());
+            Date fechaNow = formatter.parse(fechaNowString);
+            // System.out.println(fechaNow.getTime());
+            // System.out.println(fechaSensor.getTime());
+            float diference = Math.abs(fechaNow.getTime() - fechaSensor.getTime());
+            FileWriter fstream = new FileWriter(fileName, true);
+            BufferedWriter out = new BufferedWriter(fstream);
+            out.write(tipo + " " + diference + "\n");
+            out.close();
+        } catch (Exception e) {
+            System.out.println("Ha ocurrido un error. ");
+            e.printStackTrace();
+        }
+    }
+
 }

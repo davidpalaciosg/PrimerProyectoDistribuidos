@@ -1,6 +1,7 @@
 package com.proyectodistribuidos;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.StringTokenizer;
 import java.io.*;
 
@@ -153,20 +154,21 @@ public class CrearReplica {
     }
 
     private static Alarma alarmaGenerada(String tipo, float dato) {
-        Alarma alarmaG = new Alarma(null, -1000);
+        Date date = new Date();
+        Alarma alarmaG=null;
         StringTokenizer token = new StringTokenizer(tipo, ": ");
         String tipoS = token.nextToken();
         if (tipoS.equalsIgnoreCase("temperatura")) {
-            if ((dato < 68) || (dato > 89) || dato < 0) {// fuera de rango
-                alarmaG = new Alarma(tipo, dato);
+            if (!(dato>=68 && dato>=89)) {// fuera de rango
+                alarmaG = new Alarma(tipo, dato,date);
             }
         } else if (tipoS.equalsIgnoreCase("oxigeno")) {
-            if ((dato < 6) || (dato > 8) || dato < 0) {// fuera de rango
-                alarmaG = new Alarma(tipo, dato);
+            if (!(dato>=6 && dato>=8)) {// fuera de rango
+                alarmaG = new Alarma(tipo, dato,date);
             }
         } else if (tipoS.equalsIgnoreCase("ph")) {
-            if ((dato < 2) || (dato > 11) || dato < 0) {// fuera de rango
-                alarmaG = new Alarma(tipo, dato);
+            if (!(dato>=2 &&dato>=11)) {// fuera de rango
+                alarmaG = new Alarma(tipo, dato,date);
             }
         }
         return alarmaG;
@@ -214,7 +216,7 @@ public class CrearReplica {
                         }
                         // Genera alarma y envía al sistema de calidad
                         Alarma alarma = alarmaGenerada(tipoA, dato);
-                        if (alarma.getTipo() != null) {
+                        if (alarma!= null) {
                             pushCalidad.send(alarma.toString());
                         }
 

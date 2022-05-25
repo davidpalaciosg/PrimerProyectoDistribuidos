@@ -1,9 +1,7 @@
 package com.proyectodistribuidos;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.StringTokenizer;
 import java.io.*;
@@ -119,11 +117,11 @@ public class CrearMonitor {
                 System.out.println(string);
 
                 // Escribe en el archivo de Medidas correctas y fuera de rango
-                StringTokenizer token = new StringTokenizer(string, " ");
-                String tipoA = token.nextToken();
-                float dato = Float.valueOf(token.nextToken());
-                token.nextToken();
-                String tiempoSensor = token.nextToken();
+                String[] parts= string.split(" ");
+                
+                String tipoA = parts[0];
+                Float dato = Float.parseFloat(parts[1]);
+                String tiempoSensor = parts[3];
                 if (dato >= 0) {
                     String fileName = "Medidas.txt";
                     try {
@@ -146,10 +144,13 @@ public class CrearMonitor {
                             .println("Error al calcular el tiempo entre la salida del sensor y la entrada al monitor");
                 }
 
-                Alarma alarma = alarmaGenerada(tipoA, dato);
-                if (alarma.getTipo() != null) {
-                    push.send(alarma.toString());
+                //Generar alarma
+                if(isWrong(tipoA,dato))
+                {
+                    Alarma nuevaAlarma = new Alarma(tipo,dato,new Date());
+                    push.send(nuevaAlarma.toString());
                 }
+               
 
                 // Publicar hacia el Health Check
                 if (exitoPubHealth == true) {
@@ -197,20 +198,21 @@ public class CrearMonitor {
     }
 
     private static Alarma alarmaGenerada(String tipo, float dato) {
-        Alarma alarmaG = new Alarma(null, -1000);
+        Date date = new Date();
+        Alarma alarmaG=null;
         StringTokenizer token = new StringTokenizer(tipo, ": ");
         String tipoS = token.nextToken();
-        if (tipoS.equalsIgnoreCase("temperatura")) {
-            if ((dato < 68) || (dato > 89) || dato < 0) {// fuera de rango
-                alarmaG = new Alarma(tipo, dato);
+        if (tipoS.equalsIgnoreCase("temperatura:")) {
+            if (!(dato>=68 && dato>=89)) {// fuera de rango
+                alarmaG = new Alarma(tipo, dato,date);
             }
-        } else if (tipoS.equalsIgnoreCase("oxigeno")) {
-            if ((dato < 6) || (dato > 8) || dato < 0) {// fuera de rango
-                alarmaG = new Alarma(tipo, dato);
+        } else if (tipoS.equalsIgnoreCase("oxigeno:")) {
+            if (!(dato>=6 && dato>=8)) {// fuera de rango
+                alarmaG = new Alarma(tipo, dato,date);
             }
-        } else if (tipoS.equalsIgnoreCase("ph")) {
-            if ((dato < 2) || (dato > 11) || dato < 0) {// fuera de rango
-                alarmaG = new Alarma(tipo, dato);
+        } else if (tipoS.equalsIgnoreCase("ph:")) {
+            if (!(dato>=2 &&dato>=11)) {// fuera de rango
+                alarmaG = new Alarma(tipo, dato,date);
             }
         }
         return alarmaG;
@@ -244,5 +246,24 @@ public class CrearMonitor {
             System.out.println("Ha ocurrido un error. ");
             e.printStackTrace();
         }
+    }
+
+    private static boolean isWrong(String tipo, float dato)
+    {
+        boolean wrong = false;
+        if (tipo.equalsIgnoreCase("temperatura:")) {
+            if (!(dato>=68 && dato>=89)) {// fuera de rango
+                wrong = true;
+            }
+        } else if (tipo.equalsIgnoreCase("oxigeno:")) {
+            if (!(dato>=6 && dato>=8)) {// fuera de rango
+                wrong = true;
+            }
+        } else if (tipo.equalsIgnoreCase("ph:")) {
+            if (!(dato>=2 &&dato>=11)) {// fuera de rango
+                wrong = true;
+            }
+        }
+        return wrong;
     }
 }

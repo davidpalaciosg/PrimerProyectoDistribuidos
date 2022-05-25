@@ -1,8 +1,6 @@
 package com.proyectodistribuidos;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class Medida {
