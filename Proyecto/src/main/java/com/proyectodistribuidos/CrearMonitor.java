@@ -50,7 +50,7 @@ public class CrearMonitor {
             if (args.length != 3) {
                 System.out.println("Error: Número de argumentos incorrecto");
                 System.exit(1);
-            }            
+            }    
 
             /**
              * Contexto de canal de comunicación con los sensores y el sistema de Calidad
