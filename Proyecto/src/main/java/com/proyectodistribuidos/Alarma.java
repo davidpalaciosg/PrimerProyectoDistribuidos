@@ -3,11 +3,15 @@ package com.proyectodistribuidos;
 public class Alarma {
 
     private String tipo;
-    private int dato;
+    private float dato;
 
-    public Alarma(String tipo, int dato) {
+    public Alarma(String tipo, float dato) {
         this.tipo = tipo;
         this.dato = dato;
+    }
+
+    public Alarma(){
+
     }
 
     public String getTipo() {
@@ -18,11 +22,11 @@ public class Alarma {
         this.tipo = tipo;
     }
 
-    public int getDato() {
+    public float getDato() {
         return dato;
     }
 
-    public void setDato(int dato) {
+    public void setDato(float dato) {
         this.dato = dato;
     }
 

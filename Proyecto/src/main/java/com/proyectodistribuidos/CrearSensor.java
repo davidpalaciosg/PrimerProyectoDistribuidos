@@ -11,6 +11,8 @@ public class CrearSensor {
     private static Sensor sensor;
 
     /*
+     * La clase tiene una conexión con CrearMonitor (Publisher - Subscriber): 
+     * ** Actúa como Subscriber (SUB)
      * Args:
      * -[0]: tipo de sensor
      * -[1]: tiempo de creación de medidas
@@ -28,7 +30,7 @@ public class CrearSensor {
         boolean exito = false;
 
         if (args.length != 3) {
-            System.out.println("Error: Numero de argumentos incorrecto");
+            System.out.println("Error: Número de argumentos incorrecto");
             System.exit(1);
         }
         try {
@@ -103,10 +105,10 @@ public class CrearSensor {
             }
         } finally {
             if (exito == true) {
-                System.out.println("Generando medidas de " + tipo + "...");
+                System.out.println("Generando medidas de " + tipo + "..." + "\n");
                 while (!Thread.currentThread().isInterrupted()) {
                     // Generar lista de medidas
-                    String message = sensor.generarMedidas();
+                    String message = sensor.generarMedida();
                     Thread.sleep(sensor.getTiempo()); // Set the message time period
                     nuevoPublisher.send(message, 0);
                     System.out.println(message);

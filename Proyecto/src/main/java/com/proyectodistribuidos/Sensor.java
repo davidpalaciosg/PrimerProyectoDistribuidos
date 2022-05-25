@@ -11,6 +11,7 @@ public abstract class Sensor {
     private float valorMinimo;
     private float valorMaximo;
 
+    
     public Sensor(String tipo, int tiempo, ArchivoConfiguracion archivoConfiguracion) {
         this.tipo = tipo;
         this.tiempo = tiempo;
@@ -66,6 +67,35 @@ public abstract class Sensor {
         this.valorMaximo = valorMaximo;
     }
 
+    public String generarMedida(){
+        String res = "";
+
+        float probaCorrectos = archivoConfiguracion.getValoresCorrectos();
+        float probaFueraDeRango = archivoConfiguracion.getValoresFueraDeRango();
+        float probaErrores =  archivoConfiguracion.getErrores();
+
+        float proba = (float) (Math.random()); //Función genera número aleatorio entre 0.0 - 1.0
+        if (proba <= probaCorrectos ) {
+            float dato = (float) (Math.random() * (valorMaximo - valorMinimo) + valorMinimo);
+            Medida medida = new Medida(dato, tipo);
+            // Insertar medida
+            res += medida.toString();
+        } else if (proba <= probaFueraDeRango + probaCorrectos){
+            float dato = (float) (Math.random() * (valorMaximo + 25 - valorMaximo) + valorMaximo);//No sé cómo generar uno
+            Medida medida = new Medida(dato, tipo);
+            // Insertar medida
+            res += medida.toString();
+        } else {
+            float dato = (float) (Math.random() * (0 - -25) + -25); // Valores negativos
+            Medida medida = new Medida(dato, tipo);
+            // Insertar medida
+            res += medida.toString();
+        }
+        return res;
+
+    }
+
+    /*
     public String generarMedidas() {
 
         String res = "\n";
@@ -82,7 +112,7 @@ public abstract class Sensor {
         res += "Fuera de rango: " + (int) fueraDeRango + " -> " + String.format("%.2f",archivoConfiguracion.getValoresFueraDeRango() * 100) + "%\n";
         res += "\n";
         // Crear medidas válidas
-        res+="Correctas:"+"\n";
+        //res+="Correctas:"+"\n";
         for (int i = 0; i < (int) correctos; i++) {
             float dato = (float) (Math.random() * (valorMaximo - valorMinimo) + valorMinimo);
             Medida medida = new Medida(dato, tipo);
@@ -90,7 +120,7 @@ public abstract class Sensor {
             res += medida.toString();
         }
         res+="\n";
-        res+="Erroneas: "+"\n";
+        //res+="Erroneas: "+"\n";
         // Crear medidas erroneas
         for (int i = 0; i < (int) errores; i++) {
             float dato = (float) (Math.random() * (0 - -25) + -25); // Valores negativos
@@ -101,7 +131,7 @@ public abstract class Sensor {
         // Crear medidas fuera de rango
         // Medidas antes del valor mínimo [1-valorMinimo]
         res+="\n";
-        res+="Fuera de rango: "+"\n";
+        //res+="Fuera de rango: "+"\n";
         for (int i = 0; i < (int) fueraDeRango / 2; i++) {
             float dato = (float) (Math.random() * (valorMinimo - 1) + 1);
             Medida medida = new Medida(dato, tipo);
@@ -118,4 +148,5 @@ public abstract class Sensor {
         res+="\n";
         return res;
     }
+    */
 }
