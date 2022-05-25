@@ -10,6 +10,8 @@ public class UsuarioRegistrado {
         this.salt = salt;
     }
 
+    public UsuarioRegistrado(){}
+
     public String getUsuario() {
         return usuario;
     }
@@ -26,7 +28,7 @@ public class UsuarioRegistrado {
         this.hash = hash;
     }
 
-    public String getSalt (){
+    public String getSalt(){
         return salt;
     }
 
@@ -36,9 +38,7 @@ public class UsuarioRegistrado {
 
     @Override
     public String toString() {
-        return "name=" + usuario + 
-                ", hash=" + hash + 
-                ", salt=" + salt;
+        return usuario + "," + hash + "," + salt;
     }
     
 }
