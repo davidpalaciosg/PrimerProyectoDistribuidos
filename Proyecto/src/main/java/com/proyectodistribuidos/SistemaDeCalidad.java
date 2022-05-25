@@ -24,6 +24,7 @@ public class SistemaDeCalidad {
         int opcion;
         boolean menu = true;
         GestionarUsuario controladorUsuario = new GestionarUsuario();
+        controladorUsuario.leerJSON();
 
         do {
             System.out.println("\n\n Bienvenido al Sistema de Calidad");
@@ -35,7 +36,7 @@ public class SistemaDeCalidad {
             System.out.println("\n");
             switch (opcion) {
                 case 1:
-                    System.out.println("\nRegistro\n");
+                    /*System.out.println("\nRegistro\n");
                     System.out.print("\t Ingrese su nombre de usuario: ");
                     String nombreUsuario = scan.next();
                     System.out.println("");
@@ -46,7 +47,7 @@ public class SistemaDeCalidad {
                         menu = false;
                     } else {
                         System.exit(1);
-                    }
+                    }*/
                     break;
                 case 2:
                     System.out.println("\nInicio sesion\n");
@@ -59,6 +60,7 @@ public class SistemaDeCalidad {
                         System.out.println("Se ha ingresado existosamente!");
                         menu = false;
                     } else {
+                        System.out.println("Recuerde que solo los usuarios autorizados pueden acceder.");
                         System.exit(1);
                     }
                     break;

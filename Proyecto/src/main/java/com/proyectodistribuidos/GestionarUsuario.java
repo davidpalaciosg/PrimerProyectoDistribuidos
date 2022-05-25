@@ -17,10 +17,26 @@ public class GestionarUsuario {
     private ArrayList<UsuarioRegistrado> usuariosRegistrados = new ArrayList<>();
     private ArrayList<UsuarioRegistrado> usuariosAct = new ArrayList<>();
     PasswordHash controladorHash = new PasswordHash();
-
+    /**
+     * Método que permite obtener los usuarios registrados de un archivo JSON los usuarios autorizados
+     */
+    //public ArrayList<UsuarioRegistrado> leerJSON() {
+    public void leerJSON() {
+        try {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Reader reader = Files.newBufferedReader(Paths.get("usuarios.json"));
+            usuariosRegistrados = new ArrayList<UsuarioRegistrado>(
+                    Arrays.asList(gson.fromJson(reader, UsuarioRegistrado[].class)));
+            reader.close();
+        } catch (IOException e) {
+            System.out.println("Ocurrio un error en el archivo JSON.");
+        }
+        //return usuariosRegistrados;
+    }
     /**
      * Método que permite el registro de un usuario
      */
+    /*
     public boolean registrarUsuario(String nombreUsuario, String passwordIngresada) {
         if (!existeUsuario(nombreUsuario)) {
             if (passwordIngresada.length() >= 8) {
@@ -45,16 +61,18 @@ public class GestionarUsuario {
         }
         return true;
     }
-
+    
     public void registroUsuario(String usuario, String hash, String salt) {
         UsuarioRegistrado uRegistrado = new UsuarioRegistrado(usuario, hash, salt);
         escribirJSON(uRegistrado);
     }
-
+    */
+    
     /**
      * Método que permite almacenar la info. de un usuario registrado en un archivo
      * JSON
      */
+    /*
     public void escribirJSON(UsuarioRegistrado usuario) {
         try {
             usuariosAct.add(usuario);
@@ -65,26 +83,26 @@ public class GestionarUsuario {
         } catch (IOException e) {
             System.out.println("Ocurrio un error en el archivo JSON.");
         }
-    }
+    }*/
 
     /**
      * Métodos necesarios para la autenticación del usuario
      */
 
     public boolean autenticarUsuario(String usuario, String password) {
-        ArrayList<UsuarioRegistrado> usuarios = leerJSON();
-        if (!usuarios.isEmpty()) {
-            for (UsuarioRegistrado uActual : usuarios) {
+        //ArrayList<UsuarioRegistrado> usuarios = leerJSON();
+        if (!usuariosRegistrados.isEmpty()) {
+            for (UsuarioRegistrado uActual : usuariosRegistrados) {
                 if (uActual.getUsuario().equals(usuario)) {
                     try {
                         if (controladorHash.comprobarPassword(password, uActual.getSalt(), uActual.getHash()) == true) {
                             return true;
                         } else {
-                            System.out.println("Contrasena incorrecta. ");
+                            System.out.println("Contraseña incorrecta. ");
                             return false;
                         }
                     } catch (Exception e) {
-                        System.out.println("Ocurrio un error en la seguridad de la contraseña.");
+                        System.out.println("Ocurrió un error en la seguridad de la contraseña.");
                     }
 
                 } else {
@@ -94,24 +112,6 @@ public class GestionarUsuario {
             }
         }
         return false;
-    }
-
-    /**
-     * Método que permite obtener los usuarios registrados
-     */
-    public ArrayList<UsuarioRegistrado> leerJSON() {
-
-        ArrayList<UsuarioRegistrado> usuariosRegistrados = new ArrayList<>();
-        try {
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            Reader reader = Files.newBufferedReader(Paths.get("usuarios.json"));
-            usuariosRegistrados = new ArrayList<UsuarioRegistrado>(
-                    Arrays.asList(gson.fromJson(reader, UsuarioRegistrado[].class)));
-            reader.close();
-        } catch (IOException e) {
-            System.out.println("Ocurrio un error en el archivo JSON.");
-        }
-        return usuariosRegistrados;
     }
 
     /**
