@@ -13,6 +13,11 @@ public class HealthCheck {
     // Lista que guarda los monitores registrados en el Health Check
     private static ArrayList<InfoMonitorHealthCheck> listaMonitores;
     private static int tiempoHilo;
+    private static ZMQ.Context context;
+    private static ZMQ.Socket subscriberMonitor;
+    private static ZMQ.Socket pubReplica;
+    private static String tcpReplica;
+        
 
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
@@ -20,25 +25,34 @@ public class HealthCheck {
             System.exit(1);
         }
 
-        ZMQ.Context context = ZMQ.context(1);
-        // Socket subscriberMonitor de monitores
-        ZMQ.Socket subscriberMonitor = context.socket(SocketType.SUB);
+        //ARGS[0] = tiempo de espera en ms
         tiempoHilo = Integer.parseInt(args[0]);
+
+        context = ZMQ.context(1);
+        // Socket subscriberMonitor de monitores
+        subscriberMonitor = context.socket(SocketType.SUB);
 
         listaMonitores = new ArrayList<>();
         // Hilo que verifica si todos los monitores estan activos cada 3 segundos
         Runnable hilo = crearHilo();
         new Thread(hilo).start();
 
+        pubReplica = context.socket(SocketType.PUB);
+
         try {
             // Conectar a todos los monitores que lleguen por parámetro
             System.out.println("Intentando conectar a monitores");
 
             // El health check se conecta a TODOS los monitores de localhost
-            System.out.println("Conectando a " + "localhost");
+            //System.out.println("Conectando a " + "localhost");
             suscribirseAMonitor("localhost", subscriberMonitor); // Conectarse a todos los monitores
 
             subscriberMonitor.subscribe("".getBytes());
+
+            //Crear canal entre el HealthCheck y la réplica
+            tcpReplica = "tcp://*:5610";
+            pubReplica.bind(tcpReplica);
+            
 
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -49,26 +63,26 @@ public class HealthCheck {
                 String string = subscriberMonitor.recvStr();
 
                 // Obtener datos de monitor
-                System.out.println(string);
+                //System.out.println(string);
                 String[] datos = string.split(" ");
                 String pid = datos[0];
                 String tipo = datos[1];
                 String tiempo = datos[2];
-                String ip = datos[3];
+                String ipSensor = datos[3];
+                String ipSistemaDeCalidad = datos[4];
+
 
                 // Si el monitor no está en la lista, lo agrega
                 int index = getMonitorByPid(pid);
                 if (index == -1) {
-                    InfoMonitorHealthCheck info = new InfoMonitorHealthCheck(pid, tipo, tiempo, ip);
+                    InfoMonitorHealthCheck info = new InfoMonitorHealthCheck(pid, tipo, tiempo, ipSensor, ipSistemaDeCalidad);
                     listaMonitores.add(info);
-                    System.out.println("Se registró el monitor " + pid + " al Health Check para la ip " + ip);
+                    System.out.println("Se registró el monitor con PID " + pid + " al Health Check para el sensor " + ipSensor+ " y el Sistema de Calidad en " + ipSistemaDeCalidad);
                 } else {
                     // Si el monitor está en la lista, actualiza su tiempo
                     listaMonitores.get(index).setFechaDeIngreso(tiempo);
                 }
-
             }
-
         }
 
     }
@@ -97,7 +111,8 @@ public class HealthCheck {
                     // Partir la linea por uno o muchos espacios
                     String[] parts = line.split("\\s+");
                     // Obtener el PID del proceso activo
-                    procesosVivos.add(parts[1]);
+                    if(parts[0].equalsIgnoreCase("java.exe"))
+                        procesosVivos.add(parts[1]);
 
                 }
             } catch (IOException e) {
@@ -117,8 +132,11 @@ public class HealthCheck {
                 if (info.isVivo()) {
                     if (!procesosVivos.contains(info.getPidMonitor())) {
                         System.out.println("El proceso " + info.getPidMonitor() + " murió");
+                        // Enviar info del proceso muerto a la réplica
+                        String msg = info.getIpSensor()+" "+info.getTipoMonitor()+" "+info.getIpSistemaDeCalidad();
+                        System.out.println("Se envió al monitor réplica el mensaje: " + msg);
+                        pubReplica.send(msg);
                         info.setVivo(false);
-                        // Crear nuevo proceso TODO
                     }
                 }
             }

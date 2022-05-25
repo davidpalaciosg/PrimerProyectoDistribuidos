@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch CrearReplica",
+            "request": "launch",
+            "mainClass": "com.proyectodistribuidos.CrearReplica",
+            "projectName": "Proyecto"
+        },
+        {
+            "type": "java",
             "name": "Launch SistemaDeCalidad",
             "request": "launch",
             "mainClass": "com.proyectodistribuidos.SistemaDeCalidad",
