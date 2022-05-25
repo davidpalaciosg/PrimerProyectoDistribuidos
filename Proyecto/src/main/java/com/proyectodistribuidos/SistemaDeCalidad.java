@@ -93,8 +93,5 @@ public class SistemaDeCalidad {
             System.exit(1);
         }
 
-    }
-    public void imprimirAlarma(String infoAlarma) {
-        System.out.println(infoAlarma);
-    }    
+    } 
 }
