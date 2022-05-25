@@ -38,3 +38,6 @@ Crear HealthCheck:
 
 IP Cami Hamachi: 25.55.89.88
 IP David Hamachi: 25.1.215.6
+
+Medición de variables:
+1) Tiempo de envío desde Sensor hasta BD: El sensor debe enviar el tiempo de ejecución de la medición y el monitor debe calcular la diferencia

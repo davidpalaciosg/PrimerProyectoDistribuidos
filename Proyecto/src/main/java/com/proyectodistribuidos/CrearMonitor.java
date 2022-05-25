@@ -2,8 +2,12 @@ package com.proyectodistribuidos;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.StringTokenizer;
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.zeromq.SocketType;
 import org.zeromq.ZMQ;
@@ -117,6 +121,7 @@ public class CrearMonitor {
                 StringTokenizer token = new StringTokenizer(string, " ");
                 String tipoA = token.nextToken();
                 float dato = Float.valueOf(token.nextToken());
+                String tiempoSensor = token.nextToken();
                 if (dato >= 0) {
                     String fileName = "Medidas.txt";
                     try {
@@ -129,6 +134,10 @@ public class CrearMonitor {
                         e.printStackTrace();
                     }
                 }
+
+                //Calcula el tiempo entre la salida del sensor y la entrada al monitor y la guarda en un archivo
+                calcularYAgregarTiempoLlegadaSensor(tiempoSensor);
+
                 Alarma alarma = alarmaGenerada(tipoA, dato);
                 if (alarma.getTipo() != null) {
                     push.send(alarma.toString());
@@ -138,10 +147,12 @@ public class CrearMonitor {
                 if (exitoPubHealth == true) {
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
                     LocalDateTime now = LocalDateTime.now();
-                    //System.out.println("Publicando hacia el Health Check mediante el puerto " + puerto);
+                    // System.out.println("Publicando hacia el Health Check mediante el puerto " +
+                    // puerto);
                     long pid = ProcessHandle.current().pid();
-                    String msg = pid + " " + tipo + " " + dtf.format(now).toString() + " " + direccion+" "+direccionSC;
-                    //System.out.println("Publicando: " + msg);
+                    String msg = pid + " " + tipo + " " + dtf.format(now).toString() + " " + direccion + " "
+                            + direccionSC;
+                    // System.out.println("Publicando: " + msg);
                     nuevoPublisherHealth.send(msg, 0);
                 }
             }
@@ -197,4 +208,27 @@ public class CrearMonitor {
         return alarmaG;
     }
 
+    private static void calcularYAgregarTiempoLlegadaSensor(String tiempoSensor) {
+        //Convertir el tiempo del sensor a Date
+
+        //Obtener el tiempo actual
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+        Date now = new Date();
+
+        //Convertir el tiempo del sensor a Date
+        Date fechaSensor = (Date) dtf.parse(tiempoSensor);
+        
+        float diference = Math.abs(now.getTime() - fechaSensor.getTime());
+
+        String fileName = "tiemposDeLlegada.txt";
+        try {
+            FileWriter fstream = new FileWriter(fileName, true);
+            BufferedWriter out = new BufferedWriter(fstream);
+            out.write(diference + "\n");
+            out.close();
+        } catch (IOException e) {
+            System.out.println("Ha ocurrido un error. ");
+            e.printStackTrace();
+        }
+    }
 }

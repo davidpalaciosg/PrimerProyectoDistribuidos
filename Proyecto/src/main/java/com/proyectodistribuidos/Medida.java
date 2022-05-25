@@ -1,5 +1,8 @@
 package com.proyectodistribuidos;
+
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class Medida {
@@ -40,18 +43,13 @@ public class Medida {
     @Override
     public String toString() {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-        String res="";
-        if(tipo.equalsIgnoreCase("temperatura"))
-        {
-            res+="Temperatura: "+dato+" °F "+format.format(horaDeProduccion).toString()+"\n";
-        }
-        else if(tipo.equalsIgnoreCase("ph"))
-        {
-            res+="PH: "+dato+" "+format.format(horaDeProduccion).toString()+"\n";
-        }
-        else if(tipo.equalsIgnoreCase("oxigeno"))
-        {
-            res+="Oxigeno: "+dato+" Mg/L "+format.format(horaDeProduccion).toString()+"\n";
+        String res = "";
+        if (tipo.equalsIgnoreCase("temperatura")) {
+            res += "Temperatura: " + dato + "F" + format.format(horaDeProduccion).toString() + "\n";
+        } else if (tipo.equalsIgnoreCase("ph")) {
+            res += "PH: " + dato + " " + format.format(horaDeProduccion).toString() + "\n";
+        } else if (tipo.equalsIgnoreCase("oxigeno")) {
+            res += "Oxigeno: " + dato + "Mg/L " + format.format(horaDeProduccion).toString() + "\n";
         }
         return res;
     }
