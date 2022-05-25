@@ -121,6 +121,7 @@ public class CrearMonitor {
                 StringTokenizer token = new StringTokenizer(string, " ");
                 String tipoA = token.nextToken();
                 float dato = Float.valueOf(token.nextToken());
+                token.nextToken();
                 String tiempoSensor = token.nextToken();
                 if (dato >= 0) {
                     String fileName = "Medidas.txt";
@@ -135,8 +136,14 @@ public class CrearMonitor {
                     }
                 }
 
-                //Calcula el tiempo entre la salida del sensor y la entrada al monitor y la guarda en un archivo
-                calcularYAgregarTiempoLlegadaSensor(tiempoSensor);
+                // Calcula el tiempo entre la salida del sensor y la entrada al monitor y la
+                // guarda en un archivo
+                try {
+                    calcularYAgregarTiempoLlegadaSensor(tiempoSensor, tipoA);
+                } catch (Exception e) {
+                    System.out
+                            .println("Error al calcular el tiempo entre la salida del sensor y la entrada al monitor");
+                }
 
                 Alarma alarma = alarmaGenerada(tipoA, dato);
                 if (alarma.getTipo() != null) {
@@ -208,23 +215,28 @@ public class CrearMonitor {
         return alarmaG;
     }
 
-    private static void calcularYAgregarTiempoLlegadaSensor(String tiempoSensor) {
-        //Convertir el tiempo del sensor a Date
+    private static void calcularYAgregarTiempoLlegadaSensor(String tiempoSensor, String tipo) throws ParseException {
+        //Borrar ultimo caracter : de tipo sensor
+        StringBuffer sb = new StringBuffer(tipo);
+        // invoking the method
+        sb.deleteCharAt(sb.length() - 1);
 
-        //Obtener el tiempo actual
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
-        Date now = new Date();
-
-        //Convertir el tiempo del sensor a Date
-        Date fechaSensor = (Date) dtf.parse(tiempoSensor);
-        
-        float diference = Math.abs(now.getTime() - fechaSensor.getTime());
-
-        String fileName = "tiemposDeLlegada.txt";
+        // Obtener el tiempo actual
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
+        LocalDateTime now = LocalDateTime.now();
+        String nowDate = now.getHour() + ":" + now.getMinute() + ":" + now.getSecond();
+        String fileName = "tiemposDeLlegada"+sb+".txt";
         try {
+            // Convertir el tiempo del sensor a Date
+            Date fechaSensor = formatter.parse(tiempoSensor);
+            Date fechaNow = formatter.parse(nowDate);
+
+            //System.out.println(fechaNow.getTime());
+            //System.out.println(fechaSensor.getTime());
+            float diference = Math.abs(fechaNow.getTime() - fechaSensor.getTime());
             FileWriter fstream = new FileWriter(fileName, true);
             BufferedWriter out = new BufferedWriter(fstream);
-            out.write(diference + "\n");
+            out.write(tipo + " " + diference + "\n");
             out.close();
         } catch (IOException e) {
             System.out.println("Ha ocurrido un error. ");

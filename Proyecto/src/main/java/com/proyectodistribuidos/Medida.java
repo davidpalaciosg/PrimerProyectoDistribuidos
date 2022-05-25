@@ -42,7 +42,7 @@ public class Medida {
 
     @Override
     public String toString() {
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss.SSS");
         String res = "";
         if (tipo.equalsIgnoreCase("temperatura")) {
             res += "Temperatura: " + dato + " F " + format.format(horaDeProduccion).toString() + "\n";
