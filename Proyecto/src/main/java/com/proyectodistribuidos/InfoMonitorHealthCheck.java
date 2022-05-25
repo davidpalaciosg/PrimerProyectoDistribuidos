@@ -4,18 +4,26 @@ public class InfoMonitorHealthCheck {
     private String pidMonitor;
     private String tipoMonitor;
     private String ipSensor;
+    private String ipSistemaDeCalidad;
     private String fechaDeIngreso;
     private boolean vivo;
-    public InfoMonitorHealthCheck(String pidMonitor, String tipoMonitor, String fechaDeIngreso, String ipSensor) {
+    public InfoMonitorHealthCheck(String pidMonitor, String tipoMonitor, String fechaDeIngreso, String ipSensor, String ipSistemaDeCalidad) {
         this.pidMonitor = pidMonitor;
         this.tipoMonitor = tipoMonitor;
         this.fechaDeIngreso = fechaDeIngreso;
         this.vivo = true;
         this.ipSensor = ipSensor;
+        this.ipSistemaDeCalidad = ipSistemaDeCalidad;
+    }
+    
+    public String getIpSistemaDeCalidad() {
+        return ipSistemaDeCalidad;
     }
 
-    
-    
+    public void setIpSistemaDeCalidad(String ipSistemaDeCalidad) {
+        this.ipSistemaDeCalidad = ipSistemaDeCalidad;
+    }
+
     public String getIpSensor() {
         return ipSensor;
     }

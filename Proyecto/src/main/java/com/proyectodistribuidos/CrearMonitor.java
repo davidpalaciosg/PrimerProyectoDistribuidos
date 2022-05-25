@@ -138,14 +138,12 @@ public class CrearMonitor {
                 if (exitoPubHealth == true) {
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
                     LocalDateTime now = LocalDateTime.now();
-
-                    System.out.println("Publicando hacia el Health Check mediante el puerto " + puerto);
+                    //System.out.println("Publicando hacia el Health Check mediante el puerto " + puerto);
                     long pid = ProcessHandle.current().pid();
-                    String msg = pid + " " + tipo + " " + dtf.format(now).toString() + " " + direccion;
-                    System.out.println("Publicando: " + msg);
+                    String msg = pid + " " + tipo + " " + dtf.format(now).toString() + " " + direccion+" "+direccionSC;
+                    //System.out.println("Publicando: " + msg);
                     nuevoPublisherHealth.send(msg, 0);
                 }
-
             }
             subscriber.close();
             nuevoPublisherHealth.close();
@@ -184,7 +182,6 @@ public class CrearMonitor {
         StringTokenizer token = new StringTokenizer(tipo, ": ");
         String tipoS = token.nextToken();
         if (tipoS.equalsIgnoreCase("temperatura")) {
-            System.out.println("Comparando en Monitor EXITO ");
             if ((dato < 68) || (dato > 89) || dato < 0) {// fuera de rango
                 alarmaG = new Alarma(tipo, dato);
             }
