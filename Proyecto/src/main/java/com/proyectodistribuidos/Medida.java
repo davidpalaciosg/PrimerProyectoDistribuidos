@@ -45,9 +45,9 @@ public class Medida {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
         String res = "";
         if (tipo.equalsIgnoreCase("temperatura")) {
-            res += "Temperatura: " + dato + "F" + format.format(horaDeProduccion).toString() + "\n";
+            res += "Temperatura: " + dato + "F " + format.format(horaDeProduccion).toString() + "\n";
         } else if (tipo.equalsIgnoreCase("ph")) {
-            res += "PH: " + dato + " " + format.format(horaDeProduccion).toString() + "\n";
+            res += "PH: " + dato + "PH " + format.format(horaDeProduccion).toString() + "\n";
         } else if (tipo.equalsIgnoreCase("oxigeno")) {
             res += "Oxigeno: " + dato + "Mg/L " + format.format(horaDeProduccion).toString() + "\n";
         }
