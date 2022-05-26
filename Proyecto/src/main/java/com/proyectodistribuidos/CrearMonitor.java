@@ -190,8 +190,8 @@ public class CrearMonitor {
                 subscriber.connect(tcp);
             }
         } else if (tipo.equalsIgnoreCase("oxigeno")) {
-            // Rango de 5577 a 5587
-            for (int i = 5577; i <= 5587; i++) {
+            // Rango de 5577 a 5584
+            for (int i = 5577; i <= 5584; i++) {
                 String tcp = "tcp://" + direccion + ":" + i;
                 subscriber.connect(tcp);
             }
