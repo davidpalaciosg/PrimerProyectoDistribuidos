@@ -113,7 +113,7 @@ public class CrearReplica {
                         System.out.println("Intentando conectar a " + ipSensor + ": " + tipoMonitor);
                         conectarSocket(ipSensor, tipoMonitor, subscriber);
                         sensoresConectados.add(tipoMonitor);
-                        //Hilos que reciben los mensajes de los sensores
+                        // Hilos que reciben los mensajes de los sensores
                         Runnable hilo = crearHilo(ipSensor, tipoMonitor, subscriber);
                         new Thread(hilo).start();
                     }
@@ -155,20 +155,20 @@ public class CrearReplica {
 
     private static Alarma alarmaGenerada(String tipo, float dato) {
         Date date = new Date();
-        Alarma alarmaG=null;
+        Alarma alarmaG = null;
         StringTokenizer token = new StringTokenizer(tipo, ": ");
         String tipoS = token.nextToken();
         if (tipoS.equalsIgnoreCase("temperatura")) {
-            if (!(dato>=68 && dato>=89)) {// fuera de rango
-                alarmaG = new Alarma(tipo, dato,date);
+            if (!(dato >= 68 && dato >= 89)) {// fuera de rango
+                alarmaG = new Alarma(tipo, dato, date);
             }
         } else if (tipoS.equalsIgnoreCase("oxigeno")) {
-            if (!(dato>=6 && dato>=8)) {// fuera de rango
-                alarmaG = new Alarma(tipo, dato,date);
+            if (!(dato >= 6 && dato >= 8)) {// fuera de rango
+                alarmaG = new Alarma(tipo, dato, date);
             }
         } else if (tipoS.equalsIgnoreCase("ph")) {
-            if (!(dato>=2 &&dato>=11)) {// fuera de rango
-                alarmaG = new Alarma(tipo, dato,date);
+            if (!(dato >= 2 && dato >= 11)) {// fuera de rango
+                alarmaG = new Alarma(tipo, dato, date);
             }
         }
         return alarmaG;
@@ -199,9 +199,12 @@ public class CrearReplica {
                         System.out.println(string);
 
                         // Escribe en el archivo de Medidas correctas y fuera de rango
-                        StringTokenizer token = new StringTokenizer(string, " ");
-                        String tipoA = token.nextToken();
-                        float dato = Float.valueOf(token.nextToken());
+                        String[] parts = string.split(" ");
+
+                        String tipoA = parts[0];
+                        Float dato = Float.parseFloat(parts[1]);
+                        String tiempoSensor = parts[3];
+                        Medida nuevaMedida = new Medida(dato, tipo);
                         if (dato >= 0) {
                             String fileName = "Medidas.txt";
                             try {
@@ -214,10 +217,10 @@ public class CrearReplica {
                                 e.printStackTrace();
                             }
                         }
-                        // Genera alarma y envía al sistema de calidad
-                        Alarma alarma = alarmaGenerada(tipoA, dato);
-                        if (alarma!= null) {
-                            pushCalidad.send(alarma.toString());
+                        // Generar alarma
+                        if (!nuevaMedida.verificarMedida()) {
+                            Alarma nuevaAlarma = new Alarma(nuevaMedida.getTipo(), nuevaMedida.getDato(), new Date());
+                            pushCalidad.send(nuevaAlarma.toString());
                         }
 
                         // Así, se da la impresión de que se ejecuta cada cierto tiempo

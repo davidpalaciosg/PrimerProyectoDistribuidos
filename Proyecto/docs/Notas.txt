@@ -41,3 +41,7 @@ IP David Hamachi: 25.1.215.6
 
 Medición de variables:
 1) Tiempo de envío desde Sensor hasta BD: El sensor debe enviar el tiempo de ejecución de la medición y el monitor debe calcular la diferencia
+
+VIDEOS:
+1) https://www.dropbox.com/s/op5ho6f37o6tyst/pruebavideodistribuidos%20on%202022-05-26%2000-49.mp4?dl=0
+2) https://www.dropbox.com/s/zsag11djozdq7xq/pruebavideodistribuidos%20on%202022-05-26%2000-58.mp4?dl=0
